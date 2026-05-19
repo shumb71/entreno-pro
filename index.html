@@ -185,7 +185,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       <h1>Hoy</h1>
       <div style="text-align:right">
         <div id="f-fecha" style="font-size:13px;color:var(--text2)"></div>
-        <div style="font-size:10px;color:var(--text3);margin-top:1px">v20</div>
+        <div id="f-version" style="font-size:10px;color:var(--text3);margin-top:1px"></div>
         <button id="backup-status-btn" onclick="hacerBackupAhora()" style="border:none;background:transparent;padding:0;cursor:pointer;margin-top:2px">
           <span id="backup-status-lbl" style="font-size:11px;font-weight:600"></span>
         </button>
@@ -341,6 +341,40 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </div>
   </div>
 
+  <!-- CALENDARIO -->
+  <div class="screen" id="s-cal">
+    <div class="ph"><h1>Calendario</h1></div>
+    <!-- Nav mes -->
+    <div class="card" style="padding:.75rem 1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <button onclick="calMes(-1)" style="border:none;background:var(--bg3);color:var(--text);font-size:20px;width:40px;height:40px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ti ti-chevron-left"></i></button>
+        <span id="cal-titulo" style="font-size:16px;font-weight:700;letter-spacing:-.02em"></span>
+        <button onclick="calMes(1)" style="border:none;background:var(--bg3);color:var(--text);font-size:20px;width:40px;height:40px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ti ti-chevron-right"></i></button>
+      </div>
+      <!-- Cabecera días semana -->
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);padding:4px 0">L</div>
+        <div style="font-size:10px;color:var(--text3);padding:4px 0">M</div>
+        <div style="font-size:10px;color:var(--text3);padding:4px 0">X</div>
+        <div style="font-size:10px;color:var(--text3);padding:4px 0">J</div>
+        <div style="font-size:10px;color:var(--text3);padding:4px 0">V</div>
+        <div style="font-size:10px;color:var(--text3);padding:4px 0">S</div>
+        <div style="font-size:10px;color:var(--text3);padding:4px 0">D</div>
+      </div>
+      <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:2px"></div>
+    </div>
+    <!-- Detalle día seleccionado -->
+    <div class="card" id="cal-detalle" style="display:none">
+      <div id="cal-det-titulo" class="card-lbl" style="font-size:15px;font-weight:700;margin-bottom:.5rem"></div>
+      <div id="cal-det-garmin"></div>
+      <div id="cal-det-entreno"></div>
+    </div>
+    <div class="card" id="cal-vacio" style="text-align:center;padding:2rem 1rem">
+      <div style="font-size:32px;margin-bottom:.5rem">📅</div>
+      <div style="color:var(--text2);font-size:14px">Importa JSONs de Garmin para ver tus datos en el calendario</div>
+    </div>
+  </div>
+
   <!-- GARMIN -->
   <div class="screen" id="s-garmin">
     <div class="ph"><h1>Garmin</h1><span style="font-size:13px;color:var(--text2)" id="g-fecha-lbl">Sin datos</span></div>
@@ -362,8 +396,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </div>
     <div class="card">
       <div class="card-lbl">Importar datos Garmin</div>
-      <div class="info-box ib"><i class="ti ti-info-circle"></i> Ejecuta el script garmin_sync_v4.py en tu PC, luego importa el JSON generado aqui.</div>
-      <button class="bkbtn bkimp" onclick="document.getElementById('garmin-input').click()"><i class="ti ti-upload"></i> Importar JSON de Garmin</button>
+      <div class="info-box ib"><i class="ti ti-info-circle"></i> Ejecuta <b>garmin_sync_v7.py</b> en tu PC y luego importa el historial aquí.</div>
+      <button class="bkbtn bkimp" onclick="document.getElementById('garmin-hist-input').click()" style="margin-bottom:8px"><i class="ti ti-calendar-stats"></i> Importar historial Garmin (7 días)</button>
+      <input type="file" id="garmin-hist-input" accept=".json" style="display:none" onchange="importarGarminHistorial(this)">
+      <div id="garmin-import-status" style="font-size:12px;color:var(--green-text);display:none;margin-bottom:8px;padding:6px 10px;background:var(--green-bg);border-radius:var(--rs)"></div>
+      <button class="bkbtn" style="background:var(--bg2);color:var(--text2);border-color:var(--border2);font-size:12px" onclick="document.getElementById('garmin-input').click()"><i class="ti ti-upload"></i> Importar JSON día suelto</button>
       <input type="file" id="garmin-input" accept=".json" style="display:none" onchange="importarGarmin(this)">
     </div>
   </div>
@@ -430,6 +467,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <i class="ti ti-salad dnav-icon" aria-hidden="true"></i><span class="dnav-label">Nutricion</span>
       </button>
       <div class="dnav-sep"></div>
+      <button class="dnav-item" id="dnav-cal" onclick="navTo('cal','Calendario')">
+        <i class="ti ti-calendar-stats dnav-icon" aria-hidden="true"></i><span class="dnav-label">Calendario</span>
+      </button>
       <button class="dnav-item" id="dnav-garmin" onclick="navTo('garmin','Garmin')">
         <i class="ti ti-device-watch dnav-icon" aria-hidden="true"></i><span class="dnav-label">Garmin Epic</span>
       </button>
@@ -926,6 +966,7 @@ const renders={
   hoy(){
     const d=new Date();
     document.getElementById('f-fecha').textContent=d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+    const verEl=document.getElementById('f-version');if(verEl)verEl.textContent=APP_VERSION;
     const c=CICLO[(ST.dia-1)%12];
     document.getElementById('f-dia').textContent='Dia '+c.d;
     document.getElementById('f-turno').textContent=tnom(c.t)+' · '+c.h;
@@ -1314,6 +1355,10 @@ function guardar(){
     const num=info.tipo==='fijo'?(parseInt(info.series)||3):pr.n;
     for(let i=0;i<num;i++)ST.sets[key][i]={...setData};
   }else{ST.sets[key][mSer]=setData;}
+  // Guardar mapeo dia → fecha real (para el calendario)
+  if(!ST.fechaSesiones) ST.fechaSesiones={};
+  const hoyISO=new Date().toISOString().slice(0,10);
+  ST.fechaSesiones[ST.dia]=hoyISO;
   save();
   document.getElementById('mo-set').classList.remove('open');
   renders.entreno();
@@ -1324,7 +1369,7 @@ function cDia(d){ST.dia=((ST.dia-1+d+12)%12)+1;save();renders.ciclo();renders.ho
 
 // DRIVE
 const GDRIVE_CLIENT_ID='906920921997-av6s253ivqb13i6jqtn5opkkdd983qgg.apps.googleusercontent.com';
-const APP_VERSION='v22';
+const APP_VERSION='v24';
 const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 function exportarDrive(){
@@ -1439,14 +1484,217 @@ function importarGarmin(input){
     try{
       const g=JSON.parse(e.target.result);
       ST.garmin=g;
+      // Acumular historial por fecha
+      if(!ST.garminHist) ST.garminHist={};
+      if(g.fecha) ST.garminHist[g.fecha]=g;
       save();
       renders.garmin();
       renderGarminHoy();
+      if(document.getElementById('s-cal').classList.contains('active')) renders.cal();
       alert('Datos Garmin importados: '+g.fecha);
     }catch(err){alert('Error al importar el JSON de Garmin.');}
   };
   reader.readAsText(file);input.value='';
 }
+
+function importarGarminHistorial(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      const dias=data.dias||{};
+      if(!Object.keys(dias).length){alert('El fichero no contiene días.');return;}
+      if(!ST.garminHist) ST.garminHist={};
+      let nuevos=0,existentes=0;
+      Object.entries(dias).forEach(([fecha,g])=>{
+        if(ST.garminHist[fecha]){existentes++;}
+        else{ST.garminHist[fecha]=g;nuevos++;}
+        // Actualizar ST.garmin con el más reciente
+        if(!ST.garmin||fecha>ST.garmin.fecha) ST.garmin=g;
+      });
+      save();
+      renders.garmin();
+      renderGarminHoy();
+      if(document.getElementById('s-cal').classList.contains('active')) renders.cal();
+      const status=document.getElementById('garmin-import-status');
+      status.style.display='block';
+      status.textContent='✅ '+nuevos+' día(s) nuevos importados · '+existentes+' ya existían';
+      setTimeout(()=>{status.style.display='none';},4000);
+    }catch(err){alert('Error al importar el historial Garmin. Asegúrate de usar garmin_sync_v7.py');}
+  };
+  reader.readAsText(file);input.value='';
+}
+
+// ── CALENDARIO ──────────────────────────────────────────────
+let calYear=new Date().getFullYear();
+let calMonth=new Date().getMonth(); // 0-based
+let calDiaSeleccionado=null;
+
+function calMes(delta){
+  calMonth+=delta;
+  if(calMonth<0){calMonth=11;calYear--;}
+  if(calMonth>11){calMonth=0;calYear++;}
+  renders.cal();
+}
+
+function calFechaKey(y,m,d){
+  return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+}
+
+// Obtener entrenos del día (desde ST.sets, claves d{n}_ejercicio)
+// Mapeamos dia numérico a fecha real si hay garminHist, si no usamos índice relativo
+function calGetEntrenosDia(fecha){
+  // Buscamos en garminHist si hay datos de ese día
+  const hist=ST.garminHist||{};
+  // Entrenos: buscamos en ST.sets claves que coincidan con el día de sesión
+  // Como los sets usan "d{dia}" (número de día de programa), no fecha real,
+  // intentamos correlacionar por fecha si está en garminHist
+  const entrenos=[];
+  // Recorremos sets buscando sesiones que tengan fecha guardada
+  const sesKeys=Object.keys(ST.sets||{});
+  // Agrupar por día de programa
+  const dias={};
+  sesKeys.forEach(k=>{
+    const m=k.match(/^d(\d+)_/);
+    if(m){const d=m[1];if(!dias[d])dias[d]=[];dias[d].push(k);}
+  });
+  // Para el calendario, buscamos si existe fecha_sesion en ST.fechaSesiones
+  const fechaSesiones=ST.fechaSesiones||{};
+  // Si existe mapeo fecha→dia, lo usamos
+  const diaNum=Object.keys(fechaSesiones).find(d=>fechaSesiones[d]===fecha);
+  if(diaNum&&dias[diaNum]){
+    dias[diaNum].forEach(k=>{
+      const ej=k.replace(/^d\d+_/,'');
+      const sets=(ST.sets[k]||[]).filter(Boolean);
+      if(sets.length) entrenos.push({ej,sets});
+    });
+  }
+  return entrenos;
+}
+
+function calSelDia(fecha){
+  calDiaSeleccionado=fecha;
+  // Remarcar celda activa
+  document.querySelectorAll('.cal-cell').forEach(c=>c.classList.remove('cal-sel'));
+  const cel=document.querySelector('.cal-cell[data-fecha="'+fecha+'"]');
+  if(cel) cel.classList.add('cal-sel');
+  // Mostrar detalle
+  const hist=ST.garminHist||{};
+  const g=hist[fecha];
+  const det=document.getElementById('cal-detalle');
+  const vacio=document.getElementById('cal-vacio');
+  const [y,m,d]=fecha.split('-');
+  const fechaStr=new Date(parseInt(y),parseInt(m)-1,parseInt(d)).toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('cal-det-titulo').textContent=fechaStr.charAt(0).toUpperCase()+fechaStr.slice(1);
+  let htmlG='',htmlE='';
+  if(g){
+    const suenoh=g.sueno_total_min?Math.floor(g.sueno_total_min/60)+'h '+(g.sueno_total_min%60)+'min':'—';
+    htmlG=`<div style="margin-bottom:.5rem">
+      <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:6px">⌚ GARMIN</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+        <div style="background:var(--bg3);border-radius:var(--rs);padding:.5rem;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--blue)">${(g.pasos||0).toLocaleString()}</div>
+          <div style="font-size:10px;color:var(--text2)">pasos</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--rs);padding:.5rem;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--orange)">${g.calorias_dia||0}</div>
+          <div style="font-size:10px;color:var(--text2)">kcal</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--rs);padding:.5rem;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--green)">${suenoh}</div>
+          <div style="font-size:10px;color:var(--text2)">sueño</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--rs);padding:.5rem;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--red)">${g.fc_reposo||'—'}</div>
+          <div style="font-size:10px;color:var(--text2)">FC reposo</div>
+        </div>
+      </div>
+      ${g.body_battery_max?`<div class="prow" style="background:var(--bg3);border-radius:var(--rs);padding:.4rem .6rem;margin-bottom:4px"><span class="plbl">⚡ Body Battery</span><span class="pval">${g.body_battery_min||0} → ${g.body_battery_max}</span></div>`:''}
+      ${g.fuerza?`<div style="background:var(--green-bg);border-radius:var(--rs);padding:.5rem .7rem;display:flex;justify-content:space-between;align-items:center;margin-top:4px"><span style="font-size:12px;font-weight:700;color:var(--green-text)">💪 Fuerza</span><span style="font-size:12px;color:var(--green-text)">${g.fuerza.duracion_min} min · ${g.fuerza.calorias} kcal</span></div>`:''}
+    </div>`;
+  } else {
+    htmlG=`<div style="color:var(--text3);font-size:12px;margin-bottom:.75rem">Sin datos Garmin este día</div>`;
+  }
+  // Entrenos (sets del programa)
+  const fechaSesiones=ST.fechaSesiones||{};
+  const diaNum=Object.keys(fechaSesiones).find(dd=>fechaSesiones[dd]===fecha);
+  if(diaNum){
+    const sesKeys=Object.keys(ST.sets||{}).filter(k=>k.startsWith('d'+diaNum+'_'));
+    if(sesKeys.length){
+      const ejsHTML=sesKeys.map(k=>{
+        const ej=k.replace(/^d\d+_/,'');
+        const sets=(ST.sets[k]||[]).filter(Boolean);
+        if(!sets.length) return '';
+        const setsStr=sets.map((s,i)=>`S${i+1}: ${s.kg}kg×${s.reps}`).join(' · ');
+        return `<div class="prow" style="flex-direction:column;align-items:flex-start;gap:2px">
+          <span style="font-size:12px;font-weight:600;color:var(--text)">${varianteEj(ej)}</span>
+          <span style="font-size:11px;color:var(--text2)">${setsStr}</span>
+        </div>`;
+      }).filter(Boolean).join('');
+      if(ejsHTML) htmlE=`<div>
+        <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:6px">🏋️ ENTRENO DÍA ${diaNum}</div>
+        ${ejsHTML}
+      </div>`;
+    }
+  }
+  if(!htmlE) htmlE=`<div style="color:var(--text3);font-size:12px;margin-top:4px">Sin entreno registrado este día</div>`;
+  document.getElementById('cal-det-garmin').innerHTML=htmlG;
+  document.getElementById('cal-det-entreno').innerHTML=htmlE;
+  det.style.display='block';
+  vacio.style.display='none';
+  det.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+renders.cal=function(){
+  const hist=ST.garminHist||{};
+  const tieneHist=Object.keys(hist).length>0;
+  // Título mes
+  const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('cal-titulo').textContent=meses[calMonth]+' '+calYear;
+  // Primer día del mes (0=dom … 6=sab → convertir a lunes=0)
+  const primerDia=new Date(calYear,calMonth,1).getDay();
+  const offset=(primerDia===0?6:primerDia-1); // lunes como primer día
+  const diasMes=new Date(calYear,calMonth+1,0).getDate();
+  const hoy=new Date();
+  const hoyKey=calFechaKey(hoy.getFullYear(),hoy.getMonth(),hoy.getDate());
+  const grid=document.getElementById('cal-grid');
+  let html='';
+  // Celdas vacías iniciales
+  for(let i=0;i<offset;i++) html+=`<div></div>`;
+  for(let d=1;d<=diasMes;d++){
+    const fecha=calFechaKey(calYear,calMonth,d);
+    const g=hist[fecha];
+    const esFuturo=fecha>hoyKey;
+    const esHoy=fecha===hoyKey;
+    const esSel=fecha===calDiaSeleccionado;
+    // Indicadores
+    let dots='';
+    if(g){
+      dots+=`<div style="width:5px;height:5px;border-radius:50%;background:var(--blue);margin:0 1px"></div>`;
+      if(g.fuerza) dots+=`<div style="width:5px;height:5px;border-radius:50%;background:var(--green);margin:0 1px"></div>`;
+    }
+    // Color fondo
+    let bg=esSel?'var(--blue)':esHoy?'var(--bg3)':'var(--bg2)';
+    let border=esHoy&&!esSel?'1px solid var(--blue)':'1px solid var(--border)';
+    let txtColor=esSel?'#fff':esFuturo?'var(--text3)':'var(--text)';
+    html+=`<div class="cal-cell" data-fecha="${fecha}" onclick="calSelDia('${fecha}')"
+      style="background:${bg};border:${border};border-radius:8px;padding:6px 4px;text-align:center;cursor:pointer;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;transition:background .15s">
+      <span style="font-size:13px;font-weight:${esHoy?'700':'500'};color:${txtColor}">${d}</span>
+      <div style="display:flex;justify-content:center;flex-wrap:wrap">${dots}</div>
+    </div>`;
+  }
+  grid.innerHTML=html;
+  // Vacio/detalle
+  if(!tieneHist){
+    document.getElementById('cal-vacio').style.display='block';
+    document.getElementById('cal-detalle').style.display='none';
+  } else {
+    document.getElementById('cal-vacio').style.display='none';
+    // Si hay día seleccionado, reseleccionar
+    if(calDiaSeleccionado) calSelDia(calDiaSeleccionado);
+  }
+};
 
 function renderGarminHoy(){
   const g=ST.garmin;
