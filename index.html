@@ -185,7 +185,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       <h1>Hoy</h1>
       <div style="text-align:right">
         <div id="f-fecha" style="font-size:13px;color:var(--text2)"></div>
-        <div style="font-size:10px;color:var(--text3);margin-top:1px">v19</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:1px">v20</div>
         <button id="backup-status-btn" onclick="hacerBackupAhora()" style="border:none;background:transparent;padding:0;cursor:pointer;margin-top:2px">
           <span id="backup-status-lbl" style="font-size:11px;font-weight:600"></span>
         </button>
@@ -199,7 +199,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div id="sync-msg" style="font-weight:600;color:var(--text)"></div>
           <div id="sync-sub" style="font-size:11px;color:var(--text2);margin-top:1px"></div>
         </div>
-        <span id="sync-dot" style="width:8px;height:8px;border-radius:50%;flex-shrink:0"></span>
+        <button id="sync-btn" onclick="syncManual()" style="border:none;background:transparent;font-size:18px;cursor:pointer;padding:2px;flex-shrink:0" title="Sincronizar ahora">🔄</button>
       </div>
     </div>
     <div class="card">
@@ -1324,7 +1324,7 @@ function cDia(d){ST.dia=((ST.dia-1+d+12)%12)+1;save();renders.ciclo();renders.ho
 
 // DRIVE
 const GDRIVE_CLIENT_ID='906920921997-av6s253ivqb13i6jqtn5opkkdd983qgg.apps.googleusercontent.com';
-const APP_VERSION='v19';
+const APP_VERSION='v21';
 const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 function exportarDrive(){
@@ -1600,30 +1600,43 @@ function setSyncPanel(icon,msg,sub,color){
   if(dot) dot.style.background=color==='green'?'var(--green)':color==='orange'?'var(--orange)':color==='red'?'var(--red)':'var(--blue)';
 }
 
-function autoSyncDrive(){
-  if(typeof google==='undefined'||!google.accounts){
-    setSyncPanel('☁️','Sin conexion con Drive','Abre Config para conectar','orange');
-    return;
-  }
-  setSyncPanel('🔄','Sincronizando con Drive...','Comprobando version','blue');
-  var client=google.accounts.oauth2.initTokenClient({
-    client_id:GDRIVE_CLIENT_ID,
-    scope:GDRIVE_SCOPE,
-    prompt:'none',
-    callback:function(resp){
-      if(resp.error){
-        setSyncPanel('☁️','Drive no conectado','Pulsa Config para autorizar','orange');
-        return;
+
+function syncManual(){
+  if(driveTokenCached){
+    comprobarVersionDrive(driveTokenCached);
+  } else if(typeof google!=='undefined'&&google.accounts){
+    setSyncPanel('🔄','Conectando con Drive...','','blue');
+    var client=google.accounts.oauth2.initTokenClient({
+      client_id:GDRIVE_CLIENT_ID,scope:GDRIVE_SCOPE,
+      callback:function(resp){
+        if(resp.error){setSyncPanel('☁️','No autorizado','Ve a Config para conectar Drive','orange');return;}
+        driveTokenCached=resp.access_token;
+        comprobarVersionDrive(resp.access_token);
       }
-      driveTokenCached=resp.access_token;
-      comprobarVersionDrive(resp.access_token);
+    });
+    client.requestAccessToken();
+  }
+}
+
+function autoSyncDrive(){
+  // Solo sincroniza si ya hay un token cacheado de sesion anterior
+  if(driveTokenCached){
+    setSyncPanel('🔄','Sincronizando con Drive...','Comprobando version','blue');
+    comprobarVersionDrive(driveTokenCached);
+  } else {
+    // Mostrar estado sin intentar OAuth silencioso
+    var ultimoBackup=ST.ultimoBackup?new Date(ST.ultimoBackup):null;
+    if(ultimoBackup){
+      var fechaStr=ultimoBackup.toLocaleDateString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      setSyncPanel('☁️','Drive no conectado','Ultimo backup local: '+fechaStr,'orange');
+    } else {
+      setSyncPanel('☁️','Drive no conectado','Ve a Config para conectar Drive','orange');
     }
-  });
-  try{client.requestAccessToken();}
-  catch(e){setSyncPanel('☁️','Drive no conectado','Pulsa Config para autorizar','orange');}
+  }
 }
 
 function comprobarVersionDrive(token){
+  setSyncPanel('🔄','Buscando backups en Drive...','','blue');
   fetch('https://www.googleapis.com/drive/v3/files?q=name%3D%22Entreno+PRO%22+and+mimeType%3D%22application%2Fvnd.google-apps.folder%22+and+trashed%3Dfalse&fields=files(id)',
     {headers:{Authorization:'Bearer '+token}})
   .then(function(r){return r.json();})
@@ -1633,7 +1646,7 @@ function comprobarVersionDrive(token){
       return Promise.reject('no_folder');
     }
     var folderId=data.files[0].id;
-    return fetch('https://www.googleapis.com/drive/v3/files?q=%27'+folderId+'%27+in+parents+and+name+contains+%22entreno_jose%22+and+mimeType%3D%22application%2Fjson%22+and+trashed%3Dfalse&orderBy=modifiedTime+desc&fields=files(id,name,modifiedTime)&pageSize=5',
+    return fetch('https://www.googleapis.com/drive/v3/files?q=%27'+folderId+'%27+in+parents+and+name+contains+%22entreno_jose%22+and+mimeType%3D%22application%2Fjson%22+and+trashed%3Dfalse&orderBy=modifiedTime+desc&fields=files(id,name,modifiedTime,size)&pageSize=5',
       {headers:{Authorization:'Bearer '+token}});
   })
   .then(function(r){return r.json();})
@@ -1642,22 +1655,19 @@ function comprobarVersionDrive(token){
       setSyncPanel('☁️','Sin backups en Drive','Usa Config > Guardar en Drive','orange');
       return;
     }
-    var archivo=data.files[0];
-    var fechaDrive=new Date(archivo.modifiedTime);
+    var archivos=data.files;
+    var masFecha=new Date(archivos[0].modifiedTime);
     var fechaLocal=ST.ultimoBackup?new Date(ST.ultimoBackup):null;
-    var fechaStr=fechaDrive.toLocaleDateString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
 
-    if(!fechaLocal||fechaDrive>fechaLocal){
-      // Drive es mas reciente - cargar automaticamente
-      setSyncPanel('⬇️','Cargando version mas reciente...','Drive: '+fechaStr,'blue');
-      cargarDesdeDrive(driveTokenCached,archivo.id,fechaStr);
+    if(!fechaLocal||masFecha>fechaLocal){
+      // Drive tiene version mas reciente - mostrar selector
+      setSyncPanel('⬇️','Hay backups mas recientes en Drive','Elige cual cargar','blue');
+      mostrarSelectorBackups(archivos,token);
     } else {
-      // Local es mas reciente o igual - subir a Drive
-      setSyncPanel('✅','Datos sincronizados','Ultima sync: '+fechaStr,'green');
-      // Si local es mas reciente, subir silenciosamente
-      if(fechaLocal>fechaDrive){
-        subirSilencioso(token);
-      }
+      // Local es mas reciente - subir silenciosamente
+      var fechaStr=fechaLocal.toLocaleDateString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      setSyncPanel('✅','Datos al dia','Sincronizado: '+fechaStr,'green');
+      subirSilencioso(token);
     }
   })
   .catch(function(err){
@@ -1665,6 +1675,56 @@ function comprobarVersionDrive(token){
       setSyncPanel('⚠️','Error al sincronizar','Comprueba la conexion','orange');
     }
   });
+}
+
+function mostrarSelectorBackups(archivos,token){
+  var listEl=document.getElementById('mo-backups-list');
+  listEl.innerHTML='';
+  archivos.forEach(function(archivo){
+    var fecha=new Date(archivo.modifiedTime);
+    var fechaStr=fecha.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    var kb=archivo.size?Math.round(parseInt(archivo.size)/1024)+'kb':'';
+    var esReciente=archivo===archivos[0];
+
+    var row=document.createElement('div');
+    row.style.cssText='padding:.75rem 1rem;border-bottom:.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px';
+    row.onmouseover=function(){this.style.background='var(--bg2)';};
+    row.onmouseout=function(){this.style.background='transparent';};
+
+    var info=document.createElement('div');
+    info.style.cssText='flex:1';
+
+    var nombre=document.createElement('div');
+    nombre.style.cssText='font-size:13px;font-weight:600;color:var(--text)';
+    nombre.textContent=fechaStr;
+
+    var sub=document.createElement('div');
+    sub.style.cssText='font-size:11px;color:var(--text2);margin-top:2px';
+    sub.textContent=archivo.name+(kb?' · '+kb:'');
+
+    info.appendChild(nombre);
+    info.appendChild(sub);
+    row.appendChild(info);
+
+    if(esReciente){
+      var badge=document.createElement('span');
+      badge.style.cssText='font-size:10px;font-weight:700;color:var(--green-text);background:var(--green-bg);padding:2px 8px;border-radius:20px;white-space:nowrap';
+      badge.textContent='Mas reciente';
+      row.appendChild(badge);
+    }
+
+    (function(id,fs){
+      row.onclick=function(){
+        document.getElementById('mo-backups').classList.remove('open');
+        setSyncPanel('⬇️','Cargando backup...','Drive: '+fs,'blue');
+        cargarDesdeDrive(token,id,fs);
+      };
+    })(archivo.id,fechaStr);
+
+    listEl.appendChild(row);
+  });
+
+  document.getElementById('mo-backups').classList.add('open');
 }
 
 function cargarDesdeDrive(token,fileId,fechaStr){
@@ -1949,6 +2009,7 @@ function sincronizarDrive(){
     client_id:GDRIVE_CLIENT_ID,scope:GDRIVE_SCOPE,
     callback:function(resp){
       if(resp.error){syncEl.textContent='Error: '+resp.error;return;}
+      driveTokenCached=resp.access_token;
       leerDesdeD(resp.access_token,syncEl);
     }
   });
@@ -2036,6 +2097,18 @@ checkBackupReminder();
       <button onclick="addVarianteCustom()" style="border:none;background:var(--blue);color:#fff;border-radius:var(--rs);padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer">+</button>
     </div>
     <button style="width:100%;padding:11px;border:none;background:var(--bg3);color:var(--text2);border-radius:var(--rs);font-size:14px;cursor:pointer;margin-top:.75rem" onclick="closeMoVarEdit()">Cerrar</button>
+  </div>
+</div>
+
+
+<!-- MODAL SELECTOR BACKUPS DRIVE -->
+<div class="mo" id="mo-backups" onclick="if(event.target===this)document.getElementById('mo-backups').classList.remove('open')">
+  <div class="ms">
+    <div class="mh"></div>
+    <div class="mt">Backups en Drive</div>
+    <div class="info-box ib" style="font-size:12px;margin-bottom:.75rem"><i class="ti ti-info-circle"></i> Selecciona el backup que quieres cargar. El mas reciente aparece primero.</div>
+    <div id="mo-backups-list"></div>
+    <button style="width:100%;padding:11px;border:none;background:var(--bg3);color:var(--text2);border-radius:var(--rs);font-size:14px;cursor:pointer;margin-top:.75rem" onclick="document.getElementById('mo-backups').classList.remove('open')">Cancelar</button>
   </div>
 </div>
 
