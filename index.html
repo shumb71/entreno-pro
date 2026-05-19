@@ -1324,7 +1324,7 @@ function cDia(d){ST.dia=((ST.dia-1+d+12)%12)+1;save();renders.ciclo();renders.ho
 
 // DRIVE
 const GDRIVE_CLIENT_ID='906920921997-av6s253ivqb13i6jqtn5opkkdd983qgg.apps.googleusercontent.com';
-const APP_VERSION='v21';
+const APP_VERSION='v22';
 const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 function exportarDrive(){
@@ -1655,20 +1655,9 @@ function comprobarVersionDrive(token){
       setSyncPanel('☁️','Sin backups en Drive','Usa Config > Guardar en Drive','orange');
       return;
     }
-    var archivos=data.files;
-    var masFecha=new Date(archivos[0].modifiedTime);
-    var fechaLocal=ST.ultimoBackup?new Date(ST.ultimoBackup):null;
-
-    if(!fechaLocal||masFecha>fechaLocal){
-      // Drive tiene version mas reciente - mostrar selector
-      setSyncPanel('⬇️','Hay backups mas recientes en Drive','Elige cual cargar','blue');
-      mostrarSelectorBackups(archivos,token);
-    } else {
-      // Local es mas reciente - subir silenciosamente
-      var fechaStr=fechaLocal.toLocaleDateString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-      setSyncPanel('✅','Datos al dia','Sincronizado: '+fechaStr,'green');
-      subirSilencioso(token);
-    }
+    // Siempre mostrar selector con los ultimos 5
+    setSyncPanel('☁️','Elige un backup para cargar',''+data.files.length+' backups disponibles','blue');
+    mostrarSelectorBackups(data.files,token);
   })
   .catch(function(err){
     if(err!=='no_folder'){
@@ -1676,6 +1665,7 @@ function comprobarVersionDrive(token){
     }
   });
 }
+
 
 function mostrarSelectorBackups(archivos,token){
   var listEl=document.getElementById('mo-backups-list');
