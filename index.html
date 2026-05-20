@@ -23,12 +23,12 @@
 // INSTRUCCIONES: Crea un proyecto en https://console.firebase.google.com
 // Activa Firestore y Authentication (Google). Luego pega aquí tu config:
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAaG8nflb_tVtCTYV6zdg0e2a54cooyEGQ",
-  authDomain: "entreno-pro.firebaseapp.com",
-  projectId: "entreno-pro",
-  storageBucket: "entreno-pro.firebasestorage.app",
-  messagingSenderId: "213666573189",
-  appId: "1:213666573189:web:30e3c7b101a251735eb2ec"
+  apiKey: "TU_API_KEY",
+  authDomain: "TU_PROJECT.firebaseapp.com",
+  projectId: "TU_PROJECT_ID",
+  storageBucket: "TU_PROJECT.appspot.com",
+  messagingSenderId: "TU_SENDER_ID",
+  appId: "TU_APP_ID"
 };
 // ===========================================================
 
@@ -359,48 +359,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   const url = URL.createObjectURL(blob);
   document.getElementById('pwa-manifest').setAttribute('href', url);
 
-  // --- SERVICE WORKER ---
+  // --- SERVICE WORKER (fichero externo sw.js) ---
   if('serviceWorker' in navigator){
-    const swCode = `
-const CACHE = 'entreno-pro-v25';
-const OFFLINE_URLS = [self.location.href || '/'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(cache => {
-      return cache.addAll(OFFLINE_URLS).catch(()=>{});
-    })
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
-  );
-  self.clients.claim();
-});
-
-self.addEventListener('fetch', e => {
-  if(e.request.method !== 'GET') return;
-  e.respondWith(
-    fetch(e.request)
-      .then(resp => {
-        if(resp && resp.status === 200 && resp.type !== 'opaque'){
-          const clone = resp.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
-        }
-        return resp;
-      })
-      .catch(() => caches.match(e.request).then(r => r || caches.match('/')))
-  );
-});
-`;
-    const swBlob = new Blob([swCode], {type:'application/javascript'});
-    const swUrl = URL.createObjectURL(swBlob);
-    navigator.serviceWorker.register(swUrl, {scope: './'})
+    navigator.serviceWorker.register('./sw.js', {scope: './'})
       .then(reg => console.log('SW registrado:', reg.scope))
       .catch(err => console.warn('SW error:', err));
   }
@@ -626,9 +587,12 @@ self.addEventListener('fetch', e => {
       <div id="g-acts"></div>
     </div>
     <div class="card">
-      <div class="card-lbl">Importar datos Garmin</div>
-      <div class="info-box ib"><i class="ti ti-info-circle"></i> Ejecuta <b>garmin_sync_v7.py</b> en tu PC y luego importa el historial aquí.</div>
-      <button class="bkbtn bkimp" onclick="document.getElementById('garmin-hist-input').click()" style="margin-bottom:8px"><i class="ti ti-calendar-stats"></i> Importar historial Garmin (7 días)</button>
+      <div class="card-lbl">Sync automático Garmin</div>
+      <div id="garmin-auto-status" style="font-size:12px;padding:8px 10px;border-radius:var(--rs);margin-bottom:8px;background:var(--blue-bg);color:var(--blue-text)">⏳ Cargando datos desde GitHub...</div>
+      <button class="bkbtn bkimp" onclick="fetchGarminAuto(true)" style="margin-bottom:8px"><i class="ti ti-refresh"></i> Actualizar ahora desde GitHub</button>
+      <div style="height:.5px;background:var(--border);margin:.75rem 0"></div>
+      <div class="card-lbl" style="margin-top:.25rem">O importar manualmente</div>
+      <button class="bkbtn" style="background:var(--bg2);color:var(--text2);border-color:var(--border2);font-size:12px;margin-bottom:6px" onclick="document.getElementById('garmin-hist-input').click()"><i class="ti ti-calendar-stats"></i> Importar historial JSON</button>
       <input type="file" id="garmin-hist-input" accept=".json" style="display:none" onchange="importarGarminHistorial(this)">
       <div id="garmin-import-status" style="font-size:12px;color:var(--green-text);display:none;margin-bottom:8px;padding:6px 10px;background:var(--green-bg);border-radius:var(--rs)"></div>
       <button class="bkbtn" style="background:var(--bg2);color:var(--text2);border-color:var(--border2);font-size:12px" onclick="document.getElementById('garmin-input').click()"><i class="ti ti-upload"></i> Importar JSON día suelto</button>
@@ -1738,6 +1702,57 @@ function importarGarmin(input){
   };
   reader.readAsText(file);input.value='';
 }
+
+// ============================================================
+// GARMIN AUTO-FETCH desde GitHub Pages
+// ============================================================
+const GARMIN_JSON_URL = './garmin_historial.json'; // mismo repo, GitHub Pages
+
+async function fetchGarminAuto(manual) {
+  const statusEl = document.getElementById('garmin-auto-status');
+  if (statusEl) {
+    statusEl.style.background = 'var(--blue-bg)';
+    statusEl.style.color = 'var(--blue-text)';
+    statusEl.textContent = '⏳ Descargando historial desde GitHub...';
+  }
+  try {
+    const resp = await fetch(GARMIN_JSON_URL + '?t=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    if (!data.dias) throw new Error('Formato incorrecto');
+
+    // Merge con datos existentes (no sobreescribir)
+    if (!ST.garmin) ST.garmin = {};
+    Object.assign(ST.garmin, data.dias);
+    ST.garminActualizado = data.actualizado || new Date().toISOString().slice(0,10);
+    save();
+    renderGarmin();
+    renderHoy();
+
+    const total = Object.keys(ST.garmin).length;
+    if (statusEl) {
+      statusEl.style.background = 'var(--green-bg)';
+      statusEl.style.color = 'var(--green-text)';
+      statusEl.textContent = '✅ ' + total + ' días cargados · Actualizado: ' + (ST.garminActualizado || '');
+    }
+    if (manual) {
+      const t = document.getElementById('fb-toast');
+      if (t) { t.textContent = '✅ Garmin actualizado · ' + total + ' días'; t.style.opacity='1'; setTimeout(()=>{t.style.opacity='0';},3000); }
+    }
+  } catch(e) {
+    if (statusEl) {
+      statusEl.style.background = 'var(--orange-bg)';
+      statusEl.style.color = 'var(--orange-text)';
+      statusEl.textContent = '⚠️ No se pudo cargar automáticamente. Usa importación manual.';
+    }
+    console.warn('Garmin auto-fetch error:', e);
+  }
+}
+
+// Cargar automáticamente al iniciar la app
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(fetchGarminAuto, 2000); // 2s después de cargar, sin molestar
+});
 
 function importarGarminHistorial(input){
   const file=input.files[0];if(!file)return;
