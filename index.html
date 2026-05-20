@@ -22,7 +22,8 @@
 // ===================== FIREBASE CONFIG =====================
 // INSTRUCCIONES: Crea un proyecto en https://console.firebase.google.com
 // Activa Firestore y Authentication (Google). Luego pega aquí tu config:
-tCTYV6zdg0e2a54cooyEGQ",
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAaG8nflb_tVtCTYV6zdg0e2a54cooyEGQ",
   authDomain: "entreno-pro.firebaseapp.com",
   projectId: "entreno-pro",
   storageBucket: "entreno-pro.firebasestorage.app",
@@ -1548,7 +1549,7 @@ function cDia(d){ST.dia=((ST.dia-1+d+12)%12)+1;save();renders.ciclo();renders.ho
 
 // DRIVE
 const GDRIVE_CLIENT_ID='906920921997-av6s253ivqb13i6jqtn5opkkdd983qgg.apps.googleusercontent.com';
-const APP_VERSION='v27';
+const APP_VERSION='v28';
 const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 function exportarDrive(){
@@ -1695,13 +1696,12 @@ async function fetchGarminAuto(manual) {
     if (!data.dias) throw new Error('Formato incorrecto');
 
     // Merge con datos existentes (no sobreescribir)
-    if (!ST.garmin) ST.garmin = {};
     if (!ST.garminHist) ST.garminHist = {};
-    // Guardar en ambas estructuras para compatibilidad con calendario
+    // Guardar en garminHist (por fecha) para el calendario
     Object.assign(ST.garminHist, data.dias);
-    // ST.garmin = el día más reciente con datos
-    const fechas = Object.keys(data.dias).sort();
-    if (fechas.length > 0) ST.garmin = data.dias[fechas[fechas.length - 1]];
+    // ST.garmin también = dict de fechas para compatibilidad
+    if (!ST.garmin) ST.garmin = {};
+    Object.assign(ST.garmin, data.dias);
     ST.garminActualizado = data.actualizado || new Date().toISOString().slice(0,10);
     save();
     if (typeof renderGarminHoy === 'function') renderGarminHoy();
@@ -1729,6 +1729,15 @@ async function fetchGarminAuto(manual) {
 
 // Cargar automáticamente al iniciar la app (esperar a que todo esté listo)
 window.addEventListener('load', () => {
+  // Merge ST.garmin (estructura plana) → ST.garminHist (por fecha) al arrancar
+  if (ST.garmin && typeof ST.garmin === 'object') {
+    if (!ST.garminHist) ST.garminHist = {};
+    // Si ST.garmin es un dict de fechas (del auto-fetch)
+    const keys = Object.keys(ST.garmin);
+    if (keys.length > 0 && keys[0].match(/^\d{4}-\d{2}-\d{2}$/)) {
+      Object.assign(ST.garminHist, ST.garmin);
+    }
+  }
   setTimeout(fetchGarminAuto, 3000); // 3s después de cargar completo
 });
 
