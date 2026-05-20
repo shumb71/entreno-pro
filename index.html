@@ -1549,7 +1549,7 @@ function cDia(d){ST.dia=((ST.dia-1+d+12)%12)+1;save();renders.ciclo();renders.ho
 
 // DRIVE
 const GDRIVE_CLIENT_ID='906920921997-av6s253ivqb13i6jqtn5opkkdd983qgg.apps.googleusercontent.com';
-const APP_VERSION='v28';
+const APP_VERSION='v29';
 const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 function exportarDrive(){
@@ -1883,8 +1883,15 @@ function calSelDia(fecha){
     }
   }
   if(!htmlE) htmlE=`<div style="color:var(--text3);font-size:12px;margin-top:4px">Sin entreno registrado este día</div>`;
-  document.getElementById('cal-det-garmin').innerHTML=htmlG;
-  document.getElementById('cal-det-entreno').innerHTML=htmlE;
+  // Limpiar antes de rellenar para forzar re-render
+  const garminEl = document.getElementById('cal-det-garmin');
+  const entrenoEl = document.getElementById('cal-det-entreno');
+  garminEl.innerHTML = '';
+  entrenoEl.innerHTML = '';
+  // Forzar reflow
+  garminEl.offsetHeight;
+  garminEl.innerHTML = htmlG;
+  entrenoEl.innerHTML = htmlE;
   det.style.display='block';
   vacio.style.display='none';
   det.scrollIntoView({behavior:'smooth',block:'nearest'});
