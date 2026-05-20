@@ -22,15 +22,13 @@
 // ===================== FIREBASE CONFIG =====================
 // INSTRUCCIONES: Crea un proyecto en https://console.firebase.google.com
 // Activa Firestore y Authentication (Google). Luego pega aquí tu config:
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAaG8nflb_tVtCTYV6zdg0e2a54cooyEGQ",
+ apiKey: "AIzaSyAaG8nflb_tVtCTYV6zdg0e2a54cooyEGQ",
   authDomain: "entreno-pro.firebaseapp.com",
   projectId: "entreno-pro",
   storageBucket: "entreno-pro.firebasestorage.app",
   messagingSenderId: "213666573189",
   appId: "1:213666573189:web:30e3c7b101a251735eb2ec"
 };
-
 // ===========================================================
 
 let fbApp = null, fbDb = null, fbAuth = null, fbUser = null;
@@ -119,7 +117,7 @@ function suscribirCambiosRemoto() {
           Object.assign(ST, parsed);
           ST._localSaveTime = Date.now();
           save(); // actualizar localStorage también
-          renderHoy();
+          if (typeof renderHoy === 'function') renderHoy();
           updateSyncUI("synced-remote");
           mostrarToastSync();
         } catch(e) { console.error("Parse remoto:", e); }
@@ -1701,8 +1699,8 @@ async function fetchGarminAuto(manual) {
     Object.assign(ST.garmin, data.dias);
     ST.garminActualizado = data.actualizado || new Date().toISOString().slice(0,10);
     save();
-    renderGarmin();
-    renderHoy();
+    if (typeof renderGarmin === 'function') renderGarmin();
+    if (typeof renderHoy === 'function') renderHoy();
 
     const total = Object.keys(ST.garmin).length;
     if (statusEl) {
@@ -1724,9 +1722,9 @@ async function fetchGarminAuto(manual) {
   }
 }
 
-// Cargar automáticamente al iniciar la app
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(fetchGarminAuto, 2000); // 2s después de cargar, sin molestar
+// Cargar automáticamente al iniciar la app (esperar a que todo esté listo)
+window.addEventListener('load', () => {
+  setTimeout(fetchGarminAuto, 3000); // 3s después de cargar completo
 });
 
 function importarGarminHistorial(input){
