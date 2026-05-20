@@ -23,12 +23,12 @@
 // INSTRUCCIONES: Crea un proyecto en https://console.firebase.google.com
 // Activa Firestore y Authentication (Google). Luego pega aquí tu config:
 const FIREBASE_CONFIG = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_PROJECT.firebaseapp.com",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_PROJECT.appspot.com",
-  messagingSenderId: "TU_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyAaG8nflb_tVtCTYV6zdg0e2a54cooyEGQ",
+  authDomain: "entreno-pro.firebaseapp.com",
+  projectId: "entreno-pro",
+  storageBucket: "entreno-pro.firebasestorage.app",
+  messagingSenderId: "213666573189",
+  appId: "1:213666573189:web:30e3c7b101a251735eb2ec"
 };
 // ===========================================================
 
@@ -330,34 +330,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 // PWA — manifest inline + service worker
 // ============================================================
 (function(){
-  // --- MANIFEST (inyectado inline como blob) ---
-  const manifest = {
-    name: "Entreno PRO — José",
-    short_name: "Entreno PRO",
-    description: "App de entrenamiento personal",
-    start_url: "./",
-    display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#185FA5",
-    orientation: "portrait",
-    icons: [
-      {
-        src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%23185FA5'/><text x='96' y='130' font-size='110' text-anchor='middle' font-family='system-ui' fill='white'>💪</text></svg>`),
-        sizes: "192x192",
-        type: "image/svg+xml",
-        purpose: "any maskable"
-      },
-      {
-        src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23185FA5'/><text x='256' y='340' font-size='300' text-anchor='middle' font-family='system-ui' fill='white'>💪</text></svg>`),
-        sizes: "512x512",
-        type: "image/svg+xml",
-        purpose: "any maskable"
-      }
-    ]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-  const url = URL.createObjectURL(blob);
-  document.getElementById('pwa-manifest').setAttribute('href', url);
+  // --- MANIFEST (fichero externo manifest.json) ---
+  document.getElementById('pwa-manifest').setAttribute('href', './manifest.json');
 
   // --- SERVICE WORKER (fichero externo sw.js) ---
   if('serviceWorker' in navigator){
