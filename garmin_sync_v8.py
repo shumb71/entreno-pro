@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 garmin_sync_v8.py — Para GitHub Actions
+Descarga los últimos 30 días + el día de HOY (siempre, para datos en curso).
 Lee credenciales desde variables de entorno GARMIN_EMAIL y GARMIN_PASSWORD.
-Descarga los últimos 30 días de Garmin Connect y acumula el historial.
 """
 
 import json
@@ -45,13 +45,13 @@ def fetch_dia(client, fecha_str):
     d = {"fecha": fecha_str}
     try:
         stats = client.get_stats(fecha_str)
-        d["pasos"]           = stats.get("totalSteps", 0)
-        d["calorias_dia"]    = stats.get("totalKilocalories", 0)
-        d["calorias_activas"]= stats.get("activeKilocalories", 0)
-        d["distancia_km"]    = round((stats.get("totalDistanceMeters") or 0) / 1000, 2)
-        d["minutos_activos"] = stats.get("moderateIntensityMinutes", 0)
-        d["fc_reposo"]       = stats.get("restingHeartRate")
-        d["estres_medio"]    = stats.get("averageStressLevel")
+        d["pasos"]            = stats.get("totalSteps", 0)
+        d["calorias_dia"]     = stats.get("totalKilocalories", 0)
+        d["calorias_activas"] = stats.get("activeKilocalories", 0)
+        d["distancia_km"]     = round((stats.get("totalDistanceMeters") or 0) / 1000, 2)
+        d["minutos_activos"]  = stats.get("moderateIntensityMinutes", 0)
+        d["fc_reposo"]        = stats.get("restingHeartRate")
+        d["estres_medio"]     = stats.get("averageStressLevel")
         print(f"  Pasos: {d['pasos']}")
     except Exception as e:
         print(f"  ⚠️ Stats: {e}")
@@ -59,11 +59,11 @@ def fetch_dia(client, fecha_str):
     try:
         sueno = client.get_sleep_data(fecha_str)
         sd = sueno.get("dailySleepDTO", {})
-        d["sueno_total_min"]   = sd.get("sleepTimeSeconds", 0) // 60
-        d["sueno_profundo_min"]= sd.get("deepSleepSeconds", 0) // 60
-        d["sueno_ligero_min"]  = sd.get("lightSleepSeconds", 0) // 60
-        d["sueno_rem_min"]     = sd.get("remSleepSeconds", 0) // 60
-        d["sueno_puntuacion"]  = sd.get("sleepScores", {}).get("overall", {}).get("value", 0)
+        d["sueno_total_min"]    = sd.get("sleepTimeSeconds", 0) // 60
+        d["sueno_profundo_min"] = sd.get("deepSleepSeconds", 0) // 60
+        d["sueno_ligero_min"]   = sd.get("lightSleepSeconds", 0) // 60
+        d["sueno_rem_min"]      = sd.get("remSleepSeconds", 0) // 60
+        d["sueno_puntuacion"]   = sd.get("sleepScores", {}).get("overall", {}).get("value", 0)
         print(f"  Sueño: {d['sueno_total_min']} min")
     except Exception as e:
         print(f"  ⚠️ Sueño: {e}")
@@ -85,12 +85,12 @@ def fetch_dia(client, fecha_str):
             d["actividades"] = []
             for a in acts:
                 act = {
-                    "nombre": a.get("activityName", ""),
-                    "tipo":   a.get("activityType", {}).get("typeKey", ""),
+                    "nombre":       a.get("activityName", ""),
+                    "tipo":         a.get("activityType", {}).get("typeKey", ""),
                     "duracion_min": round((a.get("duration") or 0) / 60),
-                    "calorias": a.get("calories", 0),
-                    "fc_media": a.get("averageHR"),
-                    "fc_max":   a.get("maxHR"),
+                    "calorias":     a.get("calories", 0),
+                    "fc_media":     a.get("averageHR"),
+                    "fc_max":       a.get("maxHR"),
                 }
                 d["actividades"].append(act)
                 tipo = act["tipo"].lower()
@@ -104,23 +104,23 @@ def fetch_dia(client, fecha_str):
 
 def main():
     if not EMAIL or not PASSWORD:
-        print("❌ Faltan GARMIN_EMAIL o GARMIN_PASSWORD en las variables de entorno")
+        print("❌ Faltan GARMIN_EMAIL o GARMIN_PASSWORD")
         exit(1)
 
     dias_existentes = cargar_historial_existente()
     hoy = date.today()
     fechas_a_descargar = []
 
-    for i in range(1, DIAS_ATRAS + 1):
+    for i in range(0, DIAS_ATRAS + 1):
         fecha = (hoy - timedelta(days=i)).isoformat()
-        if fecha not in dias_existentes:
+        if i == 0:
+            # Hoy siempre se re-descarga (datos parciales que van actualizándose)
             fechas_a_descargar.append(fecha)
-
-    if not fechas_a_descargar:
-        print("✅ Todo al día. Nada que descargar.")
-        with open(FICHERO_SALIDA, "w", encoding="utf-8") as f:
-            json.dump({"dias": dias_existentes, "actualizado": hoy.isoformat()}, f, ensure_ascii=False, indent=2)
-        return
+            print(f"🔄 {fecha} — hoy, siempre se actualiza")
+        elif fecha not in dias_existentes:
+            fechas_a_descargar.append(fecha)
+        else:
+            print(f"⏭️  {fecha} — ya existe, saltando")
 
     print(f"\n📥 Descargando {len(fechas_a_descargar)} día(s)...\n")
     client = login()
@@ -134,7 +134,10 @@ def main():
             print(f"  ❌ Error: {e}")
 
     with open(FICHERO_SALIDA, "w", encoding="utf-8") as f:
-        json.dump({"dias": dias_existentes, "actualizado": hoy.isoformat()}, f, ensure_ascii=False, indent=2)
+        json.dump({
+            "dias": dias_existentes,
+            "actualizado": hoy.isoformat()
+        }, f, ensure_ascii=False, indent=2)
 
     print(f"\n✅ Historial guardado: {len(dias_existentes)} días totales")
 
