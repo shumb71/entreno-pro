@@ -5,11 +5,161 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#ffffff">
-<title>Entreno PRO — José</title>
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121214" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Entreno PRO">
+<link rel="manifest" id="pwa-manifest">
+<title>Entreno PRO — José v25</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script>
+// ===================== FIREBASE CONFIG =====================
+// INSTRUCCIONES: Crea un proyecto en https://console.firebase.google.com
+// Activa Firestore y Authentication (Google). Luego pega aquí tu config:
+const firebaseConfig = {
+  apiKey: "AIzaSyAaG8nflb_tVtCTYV6zdg0e2a54cooyEGQ",
+  authDomain: "entreno-pro.firebaseapp.com",
+  projectId: "entreno-pro",
+  storageBucket: "entreno-pro.firebasestorage.app",
+  messagingSenderId: "213666573189",
+  appId: "1:213666573189:web:30e3c7b101a251735eb2ec"
+};
+// ===========================================================
+
+let fbApp = null, fbDb = null, fbAuth = null, fbUser = null;
+let fbReady = false;
+let syncDebounceTimer = null;
+let fbUnsubscribe = null; // listener en tiempo real
+
+function initFirebase() {
+  try {
+    if (FIREBASE_CONFIG.apiKey === "TU_API_KEY") {
+      console.warn("Firebase: config no configurada. Sync desactivado.");
+      updateSyncUI("no-config");
+      return;
+    }
+    fbApp = firebase.initializeApp(FIREBASE_CONFIG);
+    fbDb = firebase.firestore();
+    fbAuth = firebase.auth();
+
+    fbAuth.onAuthStateChanged(user => {
+      if (user) {
+        fbUser = user;
+        fbReady = true;
+        updateSyncUI("connected", user.displayName || user.email);
+        suscribirCambiosRemoto();
+      } else {
+        fbUser = null;
+        fbReady = false;
+        if (fbUnsubscribe) { fbUnsubscribe(); fbUnsubscribe = null; }
+        updateSyncUI("logged-out");
+      }
+    });
+  } catch(e) {
+    console.error("Firebase init error:", e);
+    updateSyncUI("error");
+  }
+}
+
+// Login con Google usando Firebase Auth
+function loginFirebase() {
+  if (!fbAuth) return;
+  const provider = new firebase.auth.GoogleAuthProvider();
+  fbAuth.signInWithPopup(provider).catch(e => {
+    console.error("Login error:", e);
+    updateSyncUI("error");
+  });
+}
+
+function logoutFirebase() {
+  if (!fbAuth) return;
+  fbAuth.signOut();
+}
+
+// Guardar datos en Firestore (con debounce 2s para no saturar)
+function saveFirebase() {
+  if (!fbReady || !fbUser) return;
+  clearTimeout(syncDebounceTimer);
+  syncDebounceTimer = setTimeout(() => {
+    updateSyncUI("saving");
+    fbDb.collection("usuarios").doc(fbUser.uid).set({
+      datos: JSON.stringify(ST),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      version: "v25"
+    }).then(() => {
+      updateSyncUI("saved");
+    }).catch(e => {
+      console.error("Firestore save error:", e);
+      updateSyncUI("error");
+    });
+  }, 2000);
+}
+
+// Escucha cambios en tiempo real desde otros dispositivos
+function suscribirCambiosRemoto() {
+  if (fbUnsubscribe) fbUnsubscribe();
+  fbUnsubscribe = fbDb.collection("usuarios").doc(fbUser.uid)
+    .onSnapshot(doc => {
+      if (!doc.exists) return;
+      const data = doc.data();
+      if (!data || !data.datos) return;
+      // Solo actualizar si vino de otro dispositivo (serverTimestamp)
+      const remoto = data.updatedAt ? data.updatedAt.toMillis() : 0;
+      const local = ST._localSaveTime || 0;
+      if (remoto > local + 3000) { // margen 3s para evitar loop
+        try {
+          const parsed = JSON.parse(data.datos);
+          Object.assign(ST, parsed);
+          ST._localSaveTime = Date.now();
+          save(); // actualizar localStorage también
+          renderHoy();
+          updateSyncUI("synced-remote");
+          mostrarToastSync();
+        } catch(e) { console.error("Parse remoto:", e); }
+      }
+    }, e => console.error("Snapshot error:", e));
+}
+
+function mostrarToastSync() {
+  const t = document.getElementById("fb-toast");
+  if (!t) return;
+  t.style.opacity = "1";
+  setTimeout(() => { t.style.opacity = "0"; }, 3000);
+}
+
+function updateSyncUI(estado, nombre) {
+  const dot = document.getElementById("fb-dot");
+  const lbl = document.getElementById("fb-lbl");
+  const btnLogin = document.getElementById("fb-btn-login");
+  const btnLogout = document.getElementById("fb-btn-logout");
+  if (!dot || !lbl) return;
+
+  const estados = {
+    "no-config":    { color: "#adadad", text: "Firebase sin configurar" },
+    "logged-out":   { color: "#BA7517", text: "Sin cuenta — pulsa para entrar" },
+    "connected":    { color: "#3B6D11", text: "Sync activo · " + (nombre||"") },
+    "saving":       { color: "#185FA5", text: "Guardando…" },
+    "saved":        { color: "#3B6D11", text: "Guardado en la nube ✓" },
+    "synced-remote":{ color: "#3B6D11", text: "Datos actualizados desde otro dispositivo ✓" },
+    "error":        { color: "#A32D2D", text: "Error de sync" },
+  };
+  const e = estados[estado] || estados["error"];
+  dot.style.background = e.color;
+  lbl.textContent = e.text;
+
+  if (btnLogin) btnLogin.style.display = (estado === "logged-out" || estado === "no-config") ? "inline-block" : "none";
+  if (btnLogout) btnLogout.style.display = (estado === "connected" || estado === "saved" || estado === "saving" || estado === "synced-remote") ? "inline-block" : "none";
+}
+
+// Iniciar Firebase cuando cargue la página
+document.addEventListener("DOMContentLoaded", initFirebase);
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -175,6 +325,87 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .graf-bar{background:var(--blue);border-radius:3px 3px 0 0;width:100%;transition:height .3s;min-height:3px}
 .graf-lbl{font-size:9px;color:var(--text3);margin-top:3px;text-align:center}
 </style>
+<script>
+// ============================================================
+// PWA — manifest inline + service worker
+// ============================================================
+(function(){
+  // --- MANIFEST (inyectado inline como blob) ---
+  const manifest = {
+    name: "Entreno PRO — José",
+    short_name: "Entreno PRO",
+    description: "App de entrenamiento personal",
+    start_url: "./",
+    display: "standalone",
+    background_color: "#ffffff",
+    theme_color: "#185FA5",
+    orientation: "portrait",
+    icons: [
+      {
+        src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%23185FA5'/><text x='96' y='130' font-size='110' text-anchor='middle' font-family='system-ui' fill='white'>💪</text></svg>`),
+        sizes: "192x192",
+        type: "image/svg+xml",
+        purpose: "any maskable"
+      },
+      {
+        src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23185FA5'/><text x='256' y='340' font-size='300' text-anchor='middle' font-family='system-ui' fill='white'>💪</text></svg>`),
+        sizes: "512x512",
+        type: "image/svg+xml",
+        purpose: "any maskable"
+      }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+  const url = URL.createObjectURL(blob);
+  document.getElementById('pwa-manifest').setAttribute('href', url);
+
+  // --- SERVICE WORKER ---
+  if('serviceWorker' in navigator){
+    const swCode = `
+const CACHE = 'entreno-pro-v25';
+const OFFLINE_URLS = [self.location.href || '/'];
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE).then(cache => {
+      return cache.addAll(OFFLINE_URLS).catch(()=>{});
+    })
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', e => {
+  if(e.request.method !== 'GET') return;
+  e.respondWith(
+    fetch(e.request)
+      .then(resp => {
+        if(resp && resp.status === 200 && resp.type !== 'opaque'){
+          const clone = resp.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
+        }
+        return resp;
+      })
+      .catch(() => caches.match(e.request).then(r => r || caches.match('/')))
+  );
+});
+`;
+    const swBlob = new Blob([swCode], {type:'application/javascript'});
+    const swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl, {scope: './'})
+      .then(reg => console.log('SW registrado:', reg.scope))
+      .catch(err => console.warn('SW error:', err));
+  }
+})();
+</script>
 </head>
 <body>
 <div class="app">
@@ -415,6 +646,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </div>
       <div id="cfg-ejs"></div>
       <div class="ej-add-wrap"><input type="text" id="cfg-new" placeholder="Nuevo ejercicio..." maxlength="40"><button class="ej-add-btn" onclick="addEj()"><i class="ti ti-plus" aria-hidden="true"></i></button></div>
+    </div>
+    <!-- FIREBASE SYNC PANEL -->
+    <div class="card" style="border:.5px solid rgba(99,153,34,.3)">
+      <div class="card-lbl" style="color:var(--green)">☁️ Sync en tiempo real</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+        <span id="fb-dot" style="width:10px;height:10px;border-radius:50%;background:#adadad;flex-shrink:0;display:inline-block"></span>
+        <span id="fb-lbl" style="font-size:13px;color:var(--text2);flex:1">Iniciando…</span>
+      </div>
+      <button id="fb-btn-login" onclick="loginFirebase()" class="bkbtn bkimp" style="display:none;margin-bottom:.5rem"><i class="ti ti-brand-google" aria-hidden="true"></i> Entrar con Google para activar sync</button>
+      <button id="fb-btn-logout" onclick="logoutFirebase()" class="bkbtn" style="display:none;margin-bottom:.5rem;background:var(--bg2);color:var(--text2)"><i class="ti ti-logout" aria-hidden="true"></i> Cerrar sesión de sync</button>
+      <div class="info-box ib" style="font-size:12px;margin-top:.25rem"><i class="ti ti-info-circle" aria-hidden="true"></i> Los datos se sincronizan automáticamente entre todos tus dispositivos al instante. Sin hacer nada manual.</div>
     </div>
     <div class="card">
       <div class="card-lbl">Backup de datos</div>
@@ -788,7 +1030,7 @@ let ST={dia:1,sem:1,sets:{},nut:{},sliders:{d:0,f:1,s:3},ejs:{A:[...EJS_DEF.A],B
 let mEj=null,mSer=null;
 
 function load(){try{const x=localStorage.getItem('jose_v9');if(x){const p=JSON.parse(x);ST=Object.assign(ST,p);if(!ST.ejs)ST.ejs={A:[...EJS_DEF.A],B:[...EJS_DEF.B],C:[...EJS_DEF.C]};if(!ST.eval)ST.eval=[];}}catch(e){}}
-function save(){try{localStorage.setItem('jose_v9',JSON.stringify(ST));}catch(e){}}
+function save(){try{ST._localSaveTime=Date.now();localStorage.setItem('jose_v9',JSON.stringify(ST));saveFirebase();}catch(e){}}
 load();
 
 function getEjs(ses){return ST.ejs&&ST.ejs[ses]?ST.ejs[ses]:EJS_DEF[ses]||[];}
@@ -1369,7 +1611,7 @@ function cDia(d){ST.dia=((ST.dia-1+d+12)%12)+1;save();renders.ciclo();renders.ho
 
 // DRIVE
 const GDRIVE_CLIENT_ID='906920921997-av6s253ivqb13i6jqtn5opkkdd983qgg.apps.googleusercontent.com';
-const APP_VERSION='v24';
+const APP_VERSION='v25';
 const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 function exportarDrive(){
