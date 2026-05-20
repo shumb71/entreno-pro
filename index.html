@@ -22,7 +22,8 @@
 // ===================== FIREBASE CONFIG =====================
 // INSTRUCCIONES: Crea un proyecto en https://console.firebase.google.com
 // Activa Firestore y Authentication (Google). Luego pega aquí tu config:
- apiKey: "AIzaSyAaG8nflb_tVtCTYV6zdg0e2a54cooyEGQ",
+const FIREBASE_CONFIG = {
+  tCTYV6zdg0e2a54cooyEGQ",
   authDomain: "entreno-pro.firebaseapp.com",
   projectId: "entreno-pro",
   storageBucket: "entreno-pro.firebasestorage.app",
@@ -1699,7 +1700,7 @@ async function fetchGarminAuto(manual) {
     Object.assign(ST.garmin, data.dias);
     ST.garminActualizado = data.actualizado || new Date().toISOString().slice(0,10);
     save();
-    if (typeof renderGarmin === 'function') renderGarmin();
+    if (typeof renderGarminHoy === 'function') renderGarminHoy();
     if (typeof renderHoy === 'function') renderHoy();
 
     const total = Object.keys(ST.garmin).length;
