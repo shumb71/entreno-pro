@@ -603,13 +603,28 @@
     },
     "2026-05-21": {
       "fecha": "2026-05-21",
-      "pasos": 119,
-      "calorias_dia": 173.0,
-      "calorias_activas": 1.0,
-      "distancia_km": 0.1,
-      "minutos_activos": 0,
-      "fc_reposo": 50,
-      "estres_medio": 26
+      "pasos": 12501,
+      "calorias_dia": 2358.0,
+      "calorias_activas": 608.0,
+      "distancia_km": 9.25,
+      "minutos_activos": 33,
+      "fc_reposo": 44,
+      "estres_medio": 22,
+      "sueno_total_min": 371,
+      "sueno_profundo_min": 81,
+      "sueno_ligero_min": 236,
+      "sueno_rem_min": 55,
+      "sueno_puntuacion": 76,
+      "actividades": [
+        {
+          "nombre": "Ojén Senderismo",
+          "tipo": "hiking",
+          "duracion_min": 77,
+          "calorias": 594.0,
+          "fc_media": 126.0,
+          "fc_max": 171.0
+        }
+      ]
     }
   },
   "actualizado": "2026-05-21"
