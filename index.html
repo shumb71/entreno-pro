@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Entreno PRO">
 <link rel="manifest" id="pwa-manifest">
-<title>Entreno PRO — José v26</title>
+<title>Entreno PRO — José v27</title>
 <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -91,7 +91,7 @@ function saveFirebase() {
     fbDb.collection("usuarios").doc(fbUser.uid).set({
       datos: JSON.stringify(ST),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      version: "v26"
+      version: "v27"
     }).then(() => {
       updateSyncUI("saved");
     }).catch(e => {
@@ -1225,8 +1225,12 @@ const renders={
       else{numSer=pr.n;rpsLabel=info.reps?pr.r+' '+info.reps:String(pr.r);}
       tot+=numSer;
       const ult=getUltimaSesion(ej);
-      // Change 7: exercise is "done" if any set has data today
-      const ejDone=ss.filter(Boolean).length>0;
+      // Change 7: exercise is "done" if any set has data today OR manual check
+      const ejDone=ejEstaHecho(ej);
+      const tieneDatosReales=(ss.filter(Boolean).length>0);
+      // cursor pointer solo si no hay datos reales (para toggle manual)
+      const checkCursor=tieneDatosReales?'default':'pointer';
+      const checkTitle=tieneDatosReales?'Completado con datos':'Marcar como hecho';
       // Change 8: format date of last session
       let ultFechaStr='';
       if(ult){
@@ -1247,7 +1251,7 @@ const renders={
       }).join('');
       return`<div style="padding:.6rem 0;border-bottom:.5px solid var(--border)">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:${ult||info.tecnica?'4px':'0'}">
-          <div style="width:22px;height:22px;border-radius:50%;background:${ejDone?'var(--green-bg)':'var(--bg3)'};border:.5px solid ${ejDone?'rgba(99,153,34,.35)':'var(--border2)'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <div onclick="toggleEjCheck('${ej.replace(/'/g,"\\'")}') " title="${checkTitle}" style="width:22px;height:22px;border-radius:50%;background:${ejDone?'var(--green-bg)':'var(--bg3)'};border:.5px solid ${ejDone?'rgba(99,153,34,.35)':'var(--border2)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:${checkCursor};transition:all .15s">
             ${ejDone?'<i class="ti ti-check" style="font-size:13px;color:var(--green-text)"></i>':''}
           </div>
           <div style="flex:1">
@@ -1461,8 +1465,12 @@ function renderVarEditList(){
 
 function getVariantesEj(ej){
   var base=VARIANTES[ej]||[ej];
+  var eliminadas=(ST.variantesEliminadas&&ST.variantesEliminadas[ej])||[];
   var custom=(ST.variantesCustom&&ST.variantesCustom[ej])||[];
-  var all=[].concat(base);
+  var all=[].concat(base).filter(function(v,i){
+    // La primera (original/base[0]) nunca se puede eliminar
+    return i===0||eliminadas.indexOf(v)===-1;
+  });
   custom.forEach(function(v){if(all.indexOf(v)===-1) all.push(v);});
   return all;
 }
@@ -1485,10 +1493,22 @@ function delVarianteCustom(idx){
   if(!varEditEj) return;
   var all=getVariantesEj(varEditEj);
   var toRemove=all[idx];
-  if(!ST.variantesCustom) ST.variantesCustom={};
-  if(!ST.variantesCustom[varEditEj]) ST.variantesCustom[varEditEj]=[];
-  var ci=ST.variantesCustom[varEditEj].indexOf(toRemove);
-  if(ci>-1) ST.variantesCustom[varEditEj].splice(ci,1);
+  if(idx===0) return; // nunca eliminar la original
+  var base=VARIANTES[varEditEj]||[varEditEj];
+  var esBase=base.indexOf(toRemove)!==-1;
+  if(esBase){
+    // Añadir a lista negra de eliminadas
+    if(!ST.variantesEliminadas) ST.variantesEliminadas={};
+    if(!ST.variantesEliminadas[varEditEj]) ST.variantesEliminadas[varEditEj]=[];
+    if(ST.variantesEliminadas[varEditEj].indexOf(toRemove)===-1)
+      ST.variantesEliminadas[varEditEj].push(toRemove);
+  } else {
+    // Es custom, eliminar del array custom
+    if(!ST.variantesCustom) ST.variantesCustom={};
+    if(!ST.variantesCustom[varEditEj]) ST.variantesCustom[varEditEj]=[];
+    var ci=ST.variantesCustom[varEditEj].indexOf(toRemove);
+    if(ci>-1) ST.variantesCustom[varEditEj].splice(ci,1);
+  }
   save();
   renderVarEditList();
 }
@@ -1568,12 +1588,29 @@ function guardar(){
   renders.entreno();
 }
 
-function cSem(d){ST.sem=Math.max(1,Math.min(12,(ST.sem||1)+d));save();renders.ciclo();}
+function toggleEjCheck(ej){
+  const key='d'+ST.dia+'_'+ej;
+  if(!ST.checksManual) ST.checksManual={};
+  const keyM='d'+ST.dia+'_'+ej;
+  // Si ya tiene datos reales, el check no se puede desmarcar manualmente (solo con datos)
+  const tieneDatos=(ST.sets[key]||[]).filter(Boolean).length>0;
+  if(tieneDatos) return; // ignorar click si hay datos reales
+  ST.checksManual[keyM]=!ST.checksManual[keyM];
+  save();
+  renders.entreno();
+}
+
+function ejEstaHecho(ej){
+  const key='d'+ST.dia+'_'+ej;
+  const tieneDatos=(ST.sets[key]||[]).filter(Boolean).length>0;
+  if(tieneDatos) return true;
+  return !!(ST.checksManual&&ST.checksManual[key]);
+}
 function cDia(d){ST.dia=((ST.dia-1+d+12)%12)+1;save();renders.ciclo();renders.hoy();}
 
 // DRIVE
 const GDRIVE_CLIENT_ID='906920921997-av6s253ivqb13i6jqtn5opkkdd983qgg.apps.googleusercontent.com';
-const APP_VERSION='v26';
+const APP_VERSION='v27';
 const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 function exportarDrive(){
@@ -2429,6 +2466,7 @@ function restoreTimer(){
 // ══════════════════════════════════════
 renders.historial=function(){
   var ejMap={};
+  // Collect from real sets data
   var keys=Object.keys(ST.sets).sort(function(a,b){
     return parseInt(a.split('_')[0].replace('d',''))-parseInt(b.split('_')[0].replace('d',''));
   });
@@ -2445,6 +2483,25 @@ renders.historial=function(){
     ejMap[ej].sesiones.push({dia:dia,sets:setsValidos,maxPeso:maxPeso,volSesion:volSesion,rpeMedia:rpeMedia,fecha:fecha});
     ejMap[ej].totalVol+=volSesion;
     if(maxPeso>ejMap[ej].mejorPeso) ejMap[ej].mejorPeso=maxPeso;
+  });
+  // Also include manually checked exercises (no sets)
+  var checksManual=ST.checksManual||{};
+  Object.keys(checksManual).forEach(function(key){
+    if(!checksManual[key]) return;
+    var parts=key.split('_');
+    var dia=parseInt(parts[0].replace('d',''));
+    var ej=parts.slice(1).join('_');
+    // Only add if not already in ejMap from sets
+    if(!ejMap[ej]) ejMap[ej]={sesiones:[],totalVol:0,mejorPeso:0};
+    // Check if this dia is already in sesiones
+    var yaExiste=ejMap[ej].sesiones.some(function(s){return s.dia===dia;});
+    if(!yaExiste){
+      ejMap[ej].sesiones.push({dia:dia,sets:[],maxPeso:0,volSesion:0,rpeMedia:0,fecha:'Dia '+dia,soloCheck:true});
+    }
+  });
+  // Sort sesiones within each exercise by dia
+  Object.values(ejMap).forEach(function(d){
+    d.sesiones.sort(function(a,b){return a.dia-b.dia;});
   });
   var ejercicios=Object.entries(ejMap);
   var totalEl=document.getElementById('hist-total');
@@ -2517,15 +2574,21 @@ renders.historial=function(){
       detalle+='<div style="padding:.5rem 0;border-bottom:.5px solid var(--border)">';
       detalle+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
       detalle+='<span style="font-size:12px;font-weight:700;color:var(--blue)">'+s.fecha+'</span>';
-      detalle+='<span style="font-size:11px;color:var(--text3)">'+s.sets.length+' series · '+Math.round(s.volSesion)+'kg · R'+s.rpeMedia+'</span></div>';
-      detalle+='<div style="display:flex;gap:5px;flex-wrap:wrap">';
-      s.sets.forEach(function(st){
-        var best=st.p===s.maxPeso;
-        var rpeCol=st.rpe>=9?'var(--red-text)':st.rpe>=8?'var(--orange-text)':(best?'var(--blue-text)':'var(--text2)');
-        var rpeBg=st.rpe>=9?'var(--red-bg)':st.rpe>=8?'var(--orange-bg)':(best?'var(--blue-bg)':'var(--bg3)');
-        detalle+='<span style="padding:3px 9px;border-radius:20px;font-size:11px;font-family:monospace;background:'+rpeBg+';color:'+rpeCol+'">'+st.p+'x'+st.r+' R'+st.rpe+'</span>';
-      });
-      detalle+='</div></div>';
+      if(s.soloCheck){
+        detalle+='<span style="font-size:11px;color:var(--green-text);background:var(--green-bg);padding:2px 8px;border-radius:20px">✓ Realizado</span></div>';
+        detalle+='<div style="font-size:11px;color:var(--text3)">Sin series registradas</div>';
+      } else {
+        detalle+='<span style="font-size:11px;color:var(--text3)">'+s.sets.length+' series · '+Math.round(s.volSesion)+'kg · R'+s.rpeMedia+'</span></div>';
+        detalle+='<div style="display:flex;gap:5px;flex-wrap:wrap">';
+        s.sets.forEach(function(st){
+          var best=st.p===s.maxPeso;
+          var rpeCol=st.rpe>=9?'var(--red-text)':st.rpe>=8?'var(--orange-text)':(best?'var(--blue-text)':'var(--text2)');
+          var rpeBg=st.rpe>=9?'var(--red-bg)':st.rpe>=8?'var(--orange-bg)':(best?'var(--blue-bg)':'var(--bg3)');
+          detalle+='<span style="padding:3px 9px;border-radius:20px;font-size:11px;font-family:monospace;background:'+rpeBg+';color:'+rpeCol+'">'+st.p+'x'+st.r+' R'+st.rpe+'</span>';
+        });
+        detalle+='</div>';
+      }
+      detalle+='</div>';
     });
 
     out+='<div class="card" style="margin-bottom:.75rem">';
