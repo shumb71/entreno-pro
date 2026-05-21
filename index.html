@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Entreno PRO">
 <link rel="manifest" id="pwa-manifest">
-<title>Entreno PRO — José v25</title>
+<title>Entreno PRO — José v26</title>
 <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -91,7 +91,7 @@ function saveFirebase() {
     fbDb.collection("usuarios").doc(fbUser.uid).set({
       datos: JSON.stringify(ST),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      version: "v25"
+      version: "v26"
     }).then(() => {
       updateSyncUI("saved");
     }).catch(e => {
@@ -391,31 +391,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <div class="empty" style="padding:.5rem 0">Sin datos Garmin. Importa el JSON desde Config.</div>
       </div>
     </div>
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
-        <div class="card-lbl" style="margin-bottom:0;color:var(--orange)">🔥 Calentamiento</div>
-        <button onclick="toggleCal('f-cal-body')" style="border:none;background:transparent;color:var(--text2);font-size:13px;cursor:pointer" id="f-cal-btn">Ver protocolo</button>
-      </div>
-      <div id="f-cal-body" style="display:none"></div>
-    </div>
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
-        <div class="card-lbl" style="margin-bottom:0">Ejercicios de hoy</div>
-        <button onclick="navTo('config','Config')" style="border:none;background:transparent;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer">Editar</button>
-      </div>
-      <div id="f-ejs"></div>
-    </div>
-    <div class="card" id="f-enf-card">
-      <div class="card-lbl" style="color:var(--green)">🧘 Enfriamiento</div>
-      <div id="f-enf"></div>
-    </div>
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
-        <div class="card-lbl" style="margin-bottom:0;color:var(--blue)">Daily Mobility - Starrett</div>
-        <button onclick="toggleMobility()" style="border:none;background:transparent;color:var(--text2);font-size:13px;cursor:pointer" id="mob-btn">Ver (12 min)</button>
-      </div>
-      <div id="mob-body" style="display:none"></div>
-    </div>
   </div>
 
   <!-- ENTRENO -->
@@ -505,6 +480,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       <div class="card-lbl">Historial de evaluaciones</div>
       <div id="eval-hist"></div>
     </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
+        <div class="card-lbl" style="margin-bottom:0;color:var(--blue)">Daily Mobility — Starrett</div>
+        <button onclick="toggleMobility()" style="border:none;background:transparent;color:var(--text2);font-size:13px;cursor:pointer" id="mob-btn">Ver (12 min)</button>
+      </div>
+      <div id="mob-body" style="display:none"></div>
+    </div>
   </div>
 
   <!-- CALENDARIO -->
@@ -543,7 +525,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
   <!-- GARMIN -->
   <div class="screen" id="s-garmin">
-    <div class="ph"><h1>Garmin</h1><span style="font-size:13px;color:var(--text2)" id="g-fecha-lbl">Sin datos</span></div>
+    <div class="ph">
+      <h1>Garmin</h1>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button onclick="garminNavDia(-1)" style="border:none;background:var(--bg3);color:var(--text);font-size:18px;width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ti ti-chevron-left"></i></button>
+        <span style="font-size:13px;color:var(--text2)" id="g-fecha-lbl">Sin datos</span>
+        <button onclick="garminNavDia(1)" id="g-nav-next" style="border:none;background:var(--bg3);color:var(--text);font-size:18px;width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ti ti-chevron-right"></i></button>
+      </div>
+    </div>
     <div class="card">
       <div class="card-lbl">Ayer — resumen del dia</div>
       <div id="g-resumen"><div class="empty">Importa el JSON desde Config → Importar Garmin</div></div>
@@ -1132,7 +1121,42 @@ function renderEnf(sesKey,elId,cardId){
   const el=document.getElementById(elId);
   if(!enf.length){card.style.display='none';return;}
   card.style.display='block';
-  el.innerHTML=enf.map((e,i)=>`
+  // Calcular tiempo total
+  const totalMin=enf.reduce((a,e)=>{const m=parseFloat(e.tm);return a+(isNaN(m)?0:m);},0);
+  const btnId=elId+'-btn';
+  const bodyId=elId+'-body';
+  // Renderizar como colapsable (igual que calentamiento)
+  const cardLbl=card.querySelector('.card-lbl');
+  if(cardLbl){
+    // Reemplazar header con versión toggle
+    const headerDiv=cardLbl.parentElement;
+    // Solo añadir botón si no existe ya
+    if(!document.getElementById(btnId)){
+      const wrapper=document.createElement('div');
+      wrapper.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem';
+      const lbl=document.createElement('div');
+      lbl.className='card-lbl';
+      lbl.style.marginBottom='0';
+      lbl.style.color='var(--green)';
+      lbl.innerHTML='🧘 Enfriamiento';
+      const btn=document.createElement('button');
+      btn.id=btnId;
+      btn.style.cssText='border:none;background:transparent;color:var(--text2);font-size:13px;cursor:pointer';
+      btn.textContent='Ver protocolo ('+(totalMin>0?totalMin+' min':'')+')'
+      btn.onclick=function(){toggleEnf(bodyId,btnId);};
+      wrapper.appendChild(lbl);
+      wrapper.appendChild(btn);
+      // Vaciar card y reconstruir
+      card.innerHTML='';
+      card.appendChild(wrapper);
+      const body=document.createElement('div');
+      body.id=bodyId;
+      body.style.display='none';
+      card.appendChild(body);
+    }
+  }
+  const body=document.getElementById(bodyId)||el;
+  body.innerHTML=enf.map((e,i)=>`
     <div style="padding:.6rem 0;border-bottom:${i<enf.length-1?'.5px solid var(--border)':'none'}">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
         <span style="font-size:14px;font-weight:600;color:var(--text);flex:1">${e.n}</span>
@@ -1140,6 +1164,19 @@ function renderEnf(sesKey,elId,cardId){
       </div>
       <div style="font-size:12px;color:var(--text2);margin-top:3px;line-height:1.4">${e.t}</div>
     </div>`).join('');
+}
+
+function toggleEnf(bodyId,btnId){
+  const body=document.getElementById(bodyId);
+  const btn=document.getElementById(btnId);
+  if(!body) return;
+  if(body.style.display==='block'){
+    body.style.display='none';
+    if(btn){const m=btn.textContent.match(/\(.*\)/);btn.textContent='Ver protocolo '+(m?m[0]:'');}
+  } else {
+    body.style.display='block';
+    if(btn) btn.textContent='Ocultar';
+  }
 }
 
 const renders={
@@ -1158,40 +1195,10 @@ const renders={
     document.getElementById('sem-t').textContent=sv.t;
     document.getElementById('sem-s').textContent=sv.s;
     const pr=PROG[(ST.sem-1)%12];
-    const ejs=getEjs(c.s);
-    const el=document.getElementById('f-ejs');
-    if(!ejs||!ejs.length){el.innerHTML='<div class="empty">'+(c.s==='Descanso'?'Paseo 30-40 min o natacion suave':'Protocolo movilidad 20 min')+'</div>';}
-    else{el.innerHTML=ejs.map(e=>{
-      const info=EJ_INFO[e]||{};
-      let srs,rps;
-      if(info.tipo==='fijo'){srs=info.series||'3';rps=info.reps||'—';}
-      else{srs=String(pr.n);rps=info.reps?pr.r+' '+info.reps:String(pr.r);}
-      const ult=getUltimaSesion(e);
-      const varActual=getVarianteActual(e);
-      const tieneVar=getVariantesEj(e).length>1;
-      return`<div style="padding:.65rem 0;border-bottom:.5px solid var(--border)">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
-          <div style="flex:1">
-            <div style="font-size:14px;font-weight:600;color:var(--text)">${varActual}</div>
-            ${varActual!==e?`<div style="font-size:10px;color:var(--text3);margin-top:1px">variante de ${e}</div>`:''}
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-            ${tieneVar?`<button onclick="abrirVariantes('${e.replace(/'/g,String.fromCharCode(39))}')" style="border:none;background:var(--bg3);color:var(--text2);border-radius:20px;padding:2px 8px;font-size:11px;cursor:pointer">&#9881;</button>`:''}
-            <span style="font-size:12px;font-weight:700;color:var(--blue);background:var(--blue-bg);padding:2px 8px;border-radius:20px;white-space:nowrap">${srs}x${rps}</span>
-          </div>
-        </div>
-        ${ult?`<div style="font-size:11px;color:var(--text2);margin-top:3px">Ultima vez: <strong>${ult.peso}kg × ${ult.reps} reps · R${ult.rpe}</strong></div>`:''}
-        ${info.tecnica?`<div style="font-size:12px;color:var(--text3);margin-top:2px;line-height:1.4">${info.tecnica}</div>`:''}
-      </div>`;
-    }).join('');}
-    renderEnf(c.s,'f-enf','f-enf-card');
-    // Reset calentamiento
+    renderGarminHoy();
+    // Reset calentamiento (hidden, kept for compatibility)
     const fCalBody=document.getElementById('f-cal-body');
     if(fCalBody){fCalBody.style.display='none';fCalBody.innerHTML='';}
-    const fCalBtn=document.getElementById('f-cal-btn');
-    if(fCalBtn) fCalBtn.textContent='Ver protocolo';
-    const fCalCard=document.getElementById('f-cal-card');
-    if(fCalCard){if(CAL[c.s]){fCalCard.style.display='block';}else{fCalCard.style.display='none';}}
   },
   entreno(){
     restoreTimer();
@@ -1218,6 +1225,20 @@ const renders={
       else{numSer=pr.n;rpsLabel=info.reps?pr.r+' '+info.reps:String(pr.r);}
       tot+=numSer;
       const ult=getUltimaSesion(ej);
+      // Change 7: exercise is "done" if any set has data today
+      const ejDone=ss.filter(Boolean).length>0;
+      // Change 8: format date of last session
+      let ultFechaStr='';
+      if(ult){
+        // Try to get real date from fechaSesiones
+        const fechaReal=ST.fechaSesiones&&ST.fechaSesiones[ult.dia];
+        if(fechaReal){
+          const fd=new Date(fechaReal+'T00:00:00');
+          ultFechaStr=fd.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+        } else {
+          ultFechaStr='Dia '+ult.dia;
+        }
+      }
       const pills=Array.from({length:numSer},(_,i)=>{
         const st=ss[i];
         if(st){vol+=st.p*st.r;done++;}
@@ -1226,6 +1247,9 @@ const renders={
       }).join('');
       return`<div style="padding:.6rem 0;border-bottom:.5px solid var(--border)">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:${ult||info.tecnica?'4px':'0'}">
+          <div style="width:22px;height:22px;border-radius:50%;background:${ejDone?'var(--green-bg)':'var(--bg3)'};border:.5px solid ${ejDone?'rgba(99,153,34,.35)':'var(--border2)'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            ${ejDone?'<i class="ti ti-check" style="font-size:13px;color:var(--green-text)"></i>':''}
+          </div>
           <div style="flex:1">
             <span class="ejname">${getVarianteActual(ej)}</span>
             ${getVarianteActual(ej)!==ej?`<div style="font-size:10px;color:var(--text3)">variante de ${ej}</div>`:''}
@@ -1234,7 +1258,7 @@ const renders={
           <span style="font-size:11px;color:var(--text2);white-space:nowrap">${numSer}x${rpsLabel}</span>
           <button onclick="abrirHistEj('${ej.replace(/'/g,"\\'")}') " style="border:none;background:transparent;color:var(--blue);cursor:pointer;padding:2px;font-size:18px;line-height:1;flex-shrink:0" title="Ver historial"><i class="ti ti-chart-line" aria-hidden="true"></i></button>
         </div>
-        ${ult?`<div style="font-size:11px;color:var(--blue-text);background:var(--blue-bg);border-radius:6px;padding:3px 8px;margin-bottom:4px;display:inline-block">Ultima vez: ${ult.peso}kg × ${ult.reps} · R${ult.rpe}</div>`:''}
+        ${ult?`<div style="font-size:11px;color:var(--blue-text);background:var(--blue-bg);border-radius:6px;padding:3px 8px;margin-bottom:4px;display:inline-block"><span style="color:var(--text3);margin-right:4px">${ultFechaStr}</span>${ult.peso}kg × ${ult.reps} · R${ult.rpe}</div>`:''}
         ${info.tecnica?`<div style="font-size:11px;color:var(--text3);margin-bottom:5px;line-height:1.4">${info.tecnica}</div>`:''}
         <div style="margin-top:4px"><div class="pills">${pills}</div></div>
       </div>`;
@@ -1507,7 +1531,7 @@ function openMo(ej,serie){
   const key='d'+ST.dia+'_'+ej;
   const prev=(ST.sets[key]||[])[serie];
   document.getElementById('m-p').value=prev?prev.p:'';
-  document.getElementById('m-r').value=prev?prev.r:'';
+  document.getElementById('m-r').value=prev?prev.r:10;
   document.getElementById('m-rpe').value=prev?prev.rpe:7;
   document.getElementById('m-n').value=prev?prev.n:'';
   // Mostrar ultima sesion
@@ -1549,7 +1573,7 @@ function cDia(d){ST.dia=((ST.dia-1+d+12)%12)+1;save();renders.ciclo();renders.ho
 
 // DRIVE
 const GDRIVE_CLIENT_ID='906920921997-av6s253ivqb13i6jqtn5opkkdd983qgg.apps.googleusercontent.com';
-const APP_VERSION='v30';
+const APP_VERSION='v26';
 const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 function exportarDrive(){
@@ -1870,10 +1894,15 @@ function calSelDia(fecha){
         const ej=k.replace(/^d\d+_/,'');
         const sets=(ST.sets[k]||[]).filter(Boolean);
         if(!sets.length) return '';
-        const setsStr=sets.map((s,i)=>`S${i+1}: ${s.kg}kg×${s.reps}`).join(' · ');
+        const maxRpe=sets.reduce((a,s)=>Math.max(a,s.rpe||0),0);
+        const ejColor=maxRpe>=9?'var(--red)':maxRpe>=8?'var(--orange)':'var(--text)';
+        const setsStr=sets.map((s,i)=>{
+          const rpeCol=s.rpe>=9?'var(--red-text)':s.rpe>=8?'var(--orange-text)':'var(--text2)';
+          return`<span style="color:${rpeCol}">S${i+1}: ${s.p}kg×${s.r} R${s.rpe}</span>`;
+        }).join(' · ');
         return `<div class="prow" style="flex-direction:column;align-items:flex-start;gap:2px">
-          <span style="font-size:12px;font-weight:600;color:var(--text)">${typeof varianteEj==='function'?varianteEj(ej):ej}</span>
-          <span style="font-size:11px;color:var(--text2)">${setsStr}</span>
+          <span style="font-size:12px;font-weight:600;color:${ejColor}">${typeof varianteEj==='function'?varianteEj(ej):ej}</span>
+          <span style="font-size:11px">${setsStr}</span>
         </div>`;
       }).filter(Boolean).join('');
       if(ejsHTML) htmlE=`<div>
@@ -1980,11 +2009,38 @@ function renderGarminHoy(){
   `;
 }
 
+// ── GARMIN NAV ────────────────────────────────────────────
+var garminFechaActual=null; // fecha seleccionada en la pestaña garmin
+
+function garminNavDia(delta){
+  const hist=ST.garminHist||{};
+  const fechas=Object.keys(hist).sort();
+  if(!fechas.length) return;
+  if(!garminFechaActual) garminFechaActual=fechas[fechas.length-1];
+  const idx=fechas.indexOf(garminFechaActual);
+  const newIdx=Math.max(0,Math.min(fechas.length-1,idx+delta));
+  garminFechaActual=fechas[newIdx];
+  renders.garmin();
+}
+
 renders.garmin=function(){
-  const g=ST.garmin;
+  const hist=ST.garminHist||{};
+  const fechas=Object.keys(hist).sort();
+  // Determinar fecha a mostrar
+  if(!garminFechaActual||!hist[garminFechaActual]){
+    garminFechaActual=fechas.length?fechas[fechas.length-1]:null;
+  }
+  const g=garminFechaActual?hist[garminFechaActual]:ST.garmin;
   const fechaEl=document.getElementById('g-fecha-lbl');
+  const nextBtn=document.getElementById('g-nav-next');
+  // Actualizar botón siguiente (desactivar si es el último día)
+  if(nextBtn && fechas.length){
+    const idx=fechas.indexOf(garminFechaActual);
+    nextBtn.style.opacity=idx>=fechas.length-1?'0.3':'1';
+    nextBtn.disabled=idx>=fechas.length-1;
+  }
   if(!g){if(fechaEl)fechaEl.textContent='Sin datos';return;}
-  if(fechaEl) fechaEl.textContent=g.fecha||'';
+  if(fechaEl) fechaEl.textContent=(g.fecha||garminFechaActual||'');
   // Resumen
   const suenoh=g.sueno_total_min?Math.floor(g.sueno_total_min/60)+'h '+(g.sueno_total_min%60)+'min':'—';
   document.getElementById('g-resumen').innerHTML=`
@@ -2330,9 +2386,13 @@ function startTimer(){
 
 function endTimer(){
   if(!ST.timerInicio) return;
+  var elapsed=Date.now()-ST.timerInicio;
+  var tiempoStr=fmtTime(elapsed);
+  // Confirmación antes de guardar
+  if(!confirm('¿Guardar sesión de hoy?\n\nDuración: '+tiempoStr+'\n\nSe guardarán todos los datos del entreno.')) return;
   clearInterval(timerInterval);timerInterval=null;
   var fin=Date.now();
-  var elapsed=fin-ST.timerInicio;
+  elapsed=fin-ST.timerInicio;
   ST.timerActivo=false;
   if(!ST.sesiones)ST.sesiones={};
   ST.sesiones['d'+ST.dia]={duracion_str:fmtTime(elapsed),duracion_min:Math.round(elapsed/60000),fecha:new Date().toLocaleDateString('es-ES',{day:'numeric',month:'short'})};
@@ -2461,14 +2521,17 @@ renders.historial=function(){
       detalle+='<div style="display:flex;gap:5px;flex-wrap:wrap">';
       s.sets.forEach(function(st){
         var best=st.p===s.maxPeso;
-        detalle+='<span style="padding:3px 9px;border-radius:20px;font-size:11px;font-family:monospace;background:'+(best?'var(--blue-bg)':'var(--bg3)')+';color:'+(best?'var(--blue-text)':'var(--text2)')+'">'+st.p+'x'+st.r+' R'+st.rpe+'</span>';
+        var rpeCol=st.rpe>=9?'var(--red-text)':st.rpe>=8?'var(--orange-text)':(best?'var(--blue-text)':'var(--text2)');
+        var rpeBg=st.rpe>=9?'var(--red-bg)':st.rpe>=8?'var(--orange-bg)':(best?'var(--blue-bg)':'var(--bg3)');
+        detalle+='<span style="padding:3px 9px;border-radius:20px;font-size:11px;font-family:monospace;background:'+rpeBg+';color:'+rpeCol+'">'+st.p+'x'+st.r+' R'+st.rpe+'</span>';
       });
       detalle+='</div></div>';
     });
 
     out+='<div class="card" style="margin-bottom:.75rem">';
     out+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.6rem">';
-    out+='<div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--text)">'+ej+'</div>';
+    var ejNameColor=ultima.rpeMedia>=9?'var(--red)':ultima.rpeMedia>=8?'var(--orange)':'var(--text)';
+    out+='<div style="flex:1"><div style="font-size:15px;font-weight:700;color:'+ejNameColor+'">'+ej+'</div>';
     out+='<div style="font-size:11px;color:var(--text2);margin-top:2px">'+sesiones.length+' sesiones &middot; mejor '+data.mejorPeso+' kg</div></div>';
     out+='<span style="font-size:13px;font-weight:700;color:'+progrColor+';background:var(--bg3);padding:3px 10px;border-radius:20px;flex-shrink:0">'+progrStr+'</span></div>';
     out+=svgHtml;
