@@ -672,6 +672,14 @@
       "sueno_puntuacion": 90,
       "actividades": [
         {
+          "nombre": "Fuerza",
+          "tipo": "strength_training",
+          "duracion_min": 162,
+          "calorias": 555.0,
+          "fc_media": 87.0,
+          "fc_max": 155.0
+        },
+        {
           "nombre": "Ojén Senderismo",
           "tipo": "hiking",
           "duracion_min": 46,
@@ -679,7 +687,15 @@
           "fc_media": 86.0,
           "fc_max": 116.0
         }
-      ]
+      ],
+      "fuerza": {
+        "nombre": "Fuerza",
+        "tipo": "strength_training",
+        "duracion_min": 162,
+        "calorias": 555.0,
+        "fc_media": 87.0,
+        "fc_max": 155.0
+      }
     }
   },
   "actualizado": "2026-05-24"
