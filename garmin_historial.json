@@ -762,7 +762,22 @@
         "fc_media": 95.0,
         "fc_max": 142.0
       }
+    },
+    "2026-05-27": {
+      "fecha": "2026-05-27",
+      "pasos": 3085,
+      "calorias_dia": 955.0,
+      "calorias_activas": 78.0,
+      "distancia_km": 2.6,
+      "minutos_activos": 0,
+      "fc_reposo": 44,
+      "estres_medio": 22,
+      "sueno_total_min": 314,
+      "sueno_profundo_min": 35,
+      "sueno_ligero_min": 236,
+      "sueno_rem_min": 44,
+      "sueno_puntuacion": 69
     }
   },
-  "actualizado": "2026-05-26"
+  "actualizado": "2026-05-27"
 }
