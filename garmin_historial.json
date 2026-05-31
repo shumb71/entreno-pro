@@ -848,7 +848,22 @@
       "sueno_ligero_min": 365,
       "sueno_rem_min": 77,
       "sueno_puntuacion": 83
+    },
+    "2026-05-31": {
+      "fecha": "2026-05-31",
+      "pasos": 85,
+      "calorias_dia": 758.0,
+      "calorias_activas": 1.0,
+      "distancia_km": 0.07,
+      "minutos_activos": 0,
+      "fc_reposo": 43,
+      "estres_medio": 11,
+      "sueno_total_min": 478,
+      "sueno_profundo_min": 52,
+      "sueno_ligero_min": 372,
+      "sueno_rem_min": 54,
+      "sueno_puntuacion": 84
     }
   },
-  "actualizado": "2026-05-30"
+  "actualizado": "2026-05-31"
 }
