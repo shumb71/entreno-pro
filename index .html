@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121214" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Entreno Boyle">
+<link rel="manifest" href="./manifest.json">
+<title>Entreno Boyle v2.0</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<style>
+:root{
+  --blue:#185FA5;--blue-bg:#E8F0FA;--blue-text:#0D3D6E;
+  --green:#3B6D11;--green-bg:#EBF5E1;--green-text:#254A0B;
+  --orange:#BA7517;--orange-bg:#FDF0D9;--orange-text:#7A4C0D;
+  --red:#A32D2D;--red-bg:#FAE8E8;--red-text:#6E0D0D;
+  --bg:#F5F5F7;--bg2:#FFFFFF;--bg3:#EBEBED;
+  --text:#1C1C1E;--text2:#636366;--text3:#AEAEB2;
+  --border:rgba(0,0,0,.1);--rs:12px;--nav-h:60px;--top-h:52px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --blue:#4A9EE0;--blue-bg:#0A1E35;--blue-text:#7EC8F5;
+  --green:#5FA832;--green-bg:#0D2209;--green-text:#8ADB55;
+  --orange:#E09444;--orange-bg:#2A1800;--orange-text:#F5BE7E;
+  --red:#E05555;--red-bg:#2A0808;--red-text:#F58080;
+  --bg:#121214;--bg2:#1C1C1E;--bg3:#2C2C2E;
+  --text:#F5F5F7;--text2:#AEAEB2;--text3:#636366;
+  --border:rgba(255,255,255,.1);
+}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;}
+#app{display:flex;flex-direction:column;height:100vh;}
+/* TOP BAR */
+#topbar{height:var(--top-h);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;z-index:100;}
+#app-title{font-size:17px;font-weight:700;}
+#sync-area{display:flex;align-items:center;gap:6px;}
+#fb-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .4s;}
+#version-lbl{font-size:11px;color:var(--text3);font-weight:600;}
+/* SCREENS */
+#screens{flex:1;overflow:hidden;position:relative;}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:12px 12px calc(var(--nav-h) + 12px);display:none;}
+.screen.active{display:block;}
+/* BOTTOM NAV */
+#bottomnav{height:var(--nav-h);background:var(--bg2);border-top:1px solid var(--border);display:flex;flex-shrink:0;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;color:var(--text3);font-size:10px;font-weight:700;cursor:pointer;padding:6px 4px;letter-spacing:.02em;}
+.nav-btn i{font-size:23px;}
+.nav-btn.active{color:var(--blue);}
+/* CARDS */
+.card{background:var(--bg2);border-radius:var(--rs);margin-bottom:10px;overflow:hidden;}
+.card-hdr{padding:.55rem .75rem;border-bottom:1px solid var(--border);font-size:11px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;}
+.prow{display:flex;align-items:center;justify-content:space-between;padding:.55rem .75rem;border-bottom:1px solid var(--border);}
+.prow:last-child{border-bottom:none;}
+/* SEMÁFORO */
+.sem{border-radius:var(--rs);padding:.75rem 1rem;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;}
+.sem-icon{font-size:24px;flex-shrink:0;}
+.sem-body{flex:1;}
+.sem-titulo{font-size:14px;font-weight:700;}
+.sem-sub{font-size:12px;margin-top:3px;opacity:.85;}
+.sv{background:var(--green-bg);color:var(--green-text);}
+.sa{background:var(--orange-bg);color:var(--orange-text);}
+.sr{background:var(--red-bg);color:var(--red-text);}
+/* SLIDERS */
+.slider-row{display:flex;align-items:center;gap:10px;padding:.5rem .75rem;border-bottom:1px solid var(--border);}
+.slider-row:last-child{border-bottom:none;}
+.slider-lbl{font-size:13px;font-weight:600;flex:0 0 68px;}
+.slider-val{font-size:13px;font-weight:700;color:var(--blue);flex:0 0 18px;text-align:right;}
+input[type=range]{flex:1;accent-color:var(--blue);height:4px;}
+/* DÍA INFO */
+.dia-info{background:var(--bg2);border-radius:var(--rs);padding:.75rem 1rem;margin-bottom:10px;}
+.dia-meta{font-size:12px;color:var(--text2);margin-bottom:6px;}
+.dia-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:4px;}
+.badge-D1,.badge-D3{background:var(--blue-bg);color:var(--blue-text);}
+.badge-D2,.badge-D4{background:var(--orange-bg);color:var(--orange-text);}
+.badge-desc{background:var(--bg3);color:var(--text2);}
+.dia-desc{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.4;}
+/* EJERCICIO */
+.bloque-lbl{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:.65rem .4rem .15rem;}
+.ej-card{background:var(--bg2);border-radius:var(--rs);margin-bottom:7px;overflow:hidden;}
+.ej-nombre-row{display:flex;align-items:center;justify-content:space-between;padding:.65rem .75rem .35rem;}
+.ej-nombre{font-size:15px;font-weight:700;flex:1;}
+.ej-var-chip{font-size:10px;background:var(--blue-bg);color:var(--blue-text);border-radius:10px;padding:2px 8px;flex-shrink:0;}
+/* HISTORIAL INLINE */
+.ej-hist{padding:.25rem .75rem .4rem;border-top:1px solid var(--border);background:var(--bg);}
+.hist-row{display:flex;gap:8px;align-items:baseline;padding:2.5px 0;}
+.hist-fecha{font-size:11px;color:var(--text3);font-weight:700;min-width:44px;flex-shrink:0;}
+.hist-dato{font-size:11px;color:var(--text2);flex:1;line-height:1.5;}
+.hist-row.reciente .hist-fecha{color:var(--blue-text);}
+.hist-row.reciente .hist-dato{color:var(--text);}
+.hist-vacio{font-size:11px;color:var(--text3);font-style:italic;padding:3px 0;}
+/* SETS HOY */
+.ej-sets-hoy{padding:.3rem .75rem;border-top:1px solid var(--border);min-height:30px;display:flex;flex-wrap:wrap;align-items:center;gap:3px;}
+.set-chip{display:inline-block;background:var(--bg3);border-radius:8px;padding:2px 8px;font-size:11px;font-weight:600;}
+.set-chip.r9{background:var(--red-bg);color:var(--red-text);}
+.set-chip.r8{background:var(--orange-bg);color:var(--orange-text);}
+.no-sets-hint{font-size:11px;color:var(--text3);font-style:italic;}
+.btn-add-set{width:100%;border:none;background:none;color:var(--blue);font-size:13px;font-weight:700;padding:.5rem .75rem;text-align:left;cursor:pointer;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px;}
+.btn-add-set i{font-size:15px;}
+.btn-add-set:active{background:var(--bg3);}
+/* TIMER */
+#timer-card{background:var(--bg2);border-radius:var(--rs);padding:.75rem 1rem;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+#timer-display{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--blue);}
+.timer-info{font-size:11px;color:var(--text3);margin-top:2px;}
+.timer-btns{display:flex;gap:8px;}
+.btn-timer{border:none;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;}
+.btn-ts{background:var(--green-bg);color:var(--green-text);}
+.btn-te{background:var(--red-bg);color:var(--red-text);}
+/* FINALIZAR */
+#btn-finalizar{width:100%;border:none;background:var(--green);color:#fff;font-size:15px;font-weight:700;padding:.85rem;border-radius:var(--rs);cursor:pointer;margin-top:6px;}
+#btn-finalizar:disabled{background:var(--bg3);color:var(--text3);}
+/* BOTONES */
+.btn{border:none;border-radius:var(--rs);padding:.7rem 1.2rem;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-bottom:8px;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-outline{background:none;border:1.5px solid var(--blue);color:var(--blue);}
+.btn-danger{background:var(--red-bg);color:var(--red-text);}
+.btn:active{opacity:.8;}
+/* MODALES */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:flex-end;}
+.modal-overlay.open{display:flex;}
+.modal-sheet{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-height:90vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,0);}
+.modal-handle{width:36px;height:4px;background:var(--bg3);border-radius:2px;margin:10px auto 0;}
+.modal-titulo{font-size:16px;font-weight:700;padding:.7rem 1rem .4rem;}
+.modal-sub{font-size:12px;color:var(--text2);padding:0 1rem .5rem;}
+.modal-body{padding:.25rem 1rem 1rem;}
+.modal-close{float:right;background:var(--bg3);border:none;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;cursor:pointer;margin:.6rem 1rem 0 0;}
+/* INPUTS */
+.inp-lbl{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:5px;display:block;}
+.inp{width:100%;border:1.5px solid var(--border);border-radius:var(--rs);padding:.6rem .75rem;font-size:16px;background:var(--bg);color:var(--text);outline:none;margin-bottom:12px;}
+.inp:focus{border-color:var(--blue);}
+.inp-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+/* RPE */
+.rpe-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0 14px;}
+.rpe-btn{border:2px solid var(--border);background:var(--bg3);border-radius:var(--rs);padding:10px 4px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;}
+.rpe-btn.sel{border-color:var(--blue);background:var(--blue-bg);color:var(--blue-text);}
+.rpe-btn.sel.rhi{border-color:var(--red);background:var(--red-bg);color:var(--red-text);}
+/* VAR SELECT */
+.var-opts{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;}
+.var-opt{border:1.5px solid var(--border);background:var(--bg3);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;}
+.var-opt.sel{border-color:var(--blue);background:var(--blue-bg);color:var(--blue-text);}
+/* CONFIG */
+.cfg-section{margin-bottom:14px;}
+.cfg-hdr{font-size:11px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:.5rem .75rem .25rem;}
+#import-log{background:var(--bg3);border-radius:var(--rs);padding:.75rem;font-size:11px;font-family:monospace;line-height:1.7;max-height:220px;overflow-y:auto;display:none;margin-top:8px;white-space:pre-wrap;}
+/* TOAST */
+#toast{position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg2);border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <span id="app-title">💪 Entreno Boyle</span>
+    <div id="sync-area">
+      <span id="fb-dot"></span>
+      <span id="version-lbl">v2.0.1</span>
+    </div>
+  </div>
+  <div id="screens">
+    <!-- ═══════════════ HOY ═══════════════ -->
+    <div id="s-hoy" class="screen active">
+      <div id="hoy-dia-info" class="dia-info"></div>
+      <div id="hoy-sem"></div>
+      <div class="card">
+        <div class="card-hdr">Fatiga y dolor</div>
+        <div class="slider-row">
+          <span class="slider-lbl">Dolor</span>
+          <input type="range" min="0" max="5" step="1" id="sl-d" oninput="sliderChange('d',this.value)">
+          <span class="slider-val" id="sv-d">0</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-lbl">Fatiga</span>
+          <input type="range" min="0" max="5" step="1" id="sl-f" oninput="sliderChange('f',this.value)">
+          <span class="slider-val" id="sv-f">0</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-lbl">Estrés</span>
+          <input type="range" min="0" max="5" step="1" id="sl-s" oninput="sliderChange('s',this.value)">
+          <span class="slider-val" id="sv-s">0</span>
+        </div>
+      </div>
+    </div>
+    <!-- ═══════════════ ENTRENO ═══════════════ -->
+    <div id="s-entreno" class="screen">
+      <div id="timer-card">
+        <div>
+          <div id="timer-display">00:00:00</div>
+          <div class="timer-info" id="timer-info">Pulsa Iniciar para empezar</div>
+        </div>
+        <div class="timer-btns">
+          <button class="btn-timer btn-ts" id="btn-tstart" onclick="startTimer()"><i class="ti ti-player-play"></i> Iniciar</button>
+          <button class="btn-timer btn-te" id="btn-tend" onclick="confirmarFinalizar()" style="display:none"><i class="ti ti-check"></i> Finalizar</button>
+        </div>
+      </div>
+      <div id="entreno-bloques"></div>
+      <button id="btn-finalizar" onclick="confirmarFinalizar()" disabled>✅ Finalizar sesión</button>
+    </div>
+    <!-- ═══════════════ CONFIG ═══════════════ -->
+    <div id="s-config" class="screen">
+      <div class="cfg-section">
+        <div class="cfg-hdr">Cuenta</div>
+        <div class="card">
+          <div class="prow" id="auth-row">
+            <span style="font-size:13px;color:var(--text2)">Cargando…</span>
+          </div>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-hdr">Programa</div>
+        <div class="card">
+          <div class="prow">
+            <span style="font-size:13px;font-weight:600">Semana actual</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button onclick="cambiarSem(-1)" style="border:none;background:var(--bg3);border-radius:8px;width:30px;height:30px;font-size:18px;cursor:pointer;">−</button>
+              <span id="cfg-sem" style="font-size:15px;font-weight:700;min-width:24px;text-align:center">1</span>
+              <button onclick="cambiarSem(1)" style="border:none;background:var(--bg3);border-radius:8px;width:30px;height:30px;font-size:18px;cursor:pointer;">+</button>
+            </div>
+          </div>
+          <div class="prow">
+            <span style="font-size:13px;font-weight:600">Fecha ancla ciclo</span>
+            <input type="date" id="cfg-anclaje" onchange="cambiarAnclaje(this.value)" style="border:1.5px solid var(--border);border-radius:8px;padding:4px 8px;background:var(--bg);color:var(--text);font-size:13px;">
+          </div>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-hdr">Importar datos del app anterior</div>
+        <div class="card" style="padding:.75rem 1rem;">
+          <p style="font-size:13px;color:var(--text2);margin-bottom:10px;line-height:1.5">Lee tus sesiones, pesos e historial del app Boyle v1 y los importa a la nueva arquitectura.</p>
+          <button class="btn btn-primary" onclick="iniciarImport()"><i class="ti ti-database-import"></i> Importar desde app anterior</button>
+          <button class="btn btn-outline" onclick="iniciarImportDryRun()" style="margin-top:0">🔍 Simulación (sin escribir)</button>
+          <div id="import-log"></div>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-hdr">App</div>
+        <div class="card">
+          <div class="prow">
+            <span style="font-size:13px;color:var(--text2)">Versión</span>
+            <span style="font-size:13px;font-weight:700">v2.0.1 — Bloque 1</span>
+          </div>
+          <div class="prow">
+            <span style="font-size:13px;color:var(--text2)">App anterior</span>
+            <a href="https://shumb71.github.io/Boyle" target="_blank" style="font-size:13px;color:var(--blue);font-weight:600">Boyle v1 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /screens -->
+  <nav id="bottomnav">
+    <button class="nav-btn active" id="nav-hoy" onclick="ir('hoy')"><i class="ti ti-home"></i>Hoy</button>
+    <button class="nav-btn" id="nav-entreno" onclick="ir('entreno')"><i class="ti ti-barbell"></i>Entreno</button>
+    <button class="nav-btn" id="nav-config" onclick="ir('config')"><i class="ti ti-settings"></i>Config</button>
+  </nav>
+</div><!-- /app -->
+
+<!-- MODAL: AÑADIR SERIE -->
+<div class="modal-overlay" id="mo-set">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="cerrarMoSet()">✕</button>
+    <div class="modal-titulo" id="mo-set-titulo">Añadir serie</div>
+    <div class="modal-sub" id="mo-set-sub"></div>
+    <div class="modal-body">
+      <div class="inp-row">
+        <div>
+          <label class="inp-lbl">Peso (kg)</label>
+          <input class="inp" type="number" id="mo-peso" min="0" step="0.5" inputmode="decimal" placeholder="0">
+        </div>
+        <div>
+          <label class="inp-lbl">Reps</label>
+          <input class="inp" type="number" id="mo-reps" min="1" step="1" inputmode="numeric" placeholder="0">
+        </div>
+      </div>
+      <label class="inp-lbl">RPE</label>
+      <div class="rpe-grid" id="rpe-grid"></div>
+      <label class="inp-lbl">Variante</label>
+      <div class="var-opts" id="var-opts"></div>
+      <label class="inp-lbl">Nota (opcional)</label>
+      <input class="inp" type="text" id="mo-nota" placeholder="p.ej. con cinturón" style="margin-bottom:14px">
+      <button class="btn btn-primary" onclick="guardarSet()"><i class="ti ti-device-floppy"></i> Guardar serie</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONSTANTES DEL PROGRAMA
+// ══════════════════════════════════════════════════════
+const APP_VERSION = 'v2.0.1';
+const FB_COL = 'usuarios_v2';
+const LS_KEY = 'boyle_v2';
+
+const CICLO = [
+  {d:1,t:'Manana', b:null, e:'Baja',  h:'Turno manana — descanso'},
+  {d:2,t:'Manana', b:'D1', e:'Alta',  h:'Entrena antes del turno (6-7h)'},
+  {d:3,t:'Tarde',  b:null, e:'Baja',  h:'Turno tarde — descanso'},
+  {d:4,t:'Tarde',  b:'D2', e:'Alta',  h:'Entrena manana (9-11h) antes del turno'},
+  {d:5,t:'Noche',  b:null, e:'Baja',  h:'Turno noche — descanso'},
+  {d:6,t:'Noche',  b:null, e:'Baja',  h:'Turno noche — descanso'},
+  {d:7,t:'Libre',  b:'D3', e:'Alta',  h:'Libre 1 — DIA CLAVE'},
+  {d:8,t:'Libre',  b:null, e:'Media', h:'Libre 2'},
+  {d:9,t:'Libre',  b:'D4', e:'Alta',  h:'Libre 3 — DIA CLAVE'},
+  {d:10,t:'Libre', b:null, e:'Media', h:'Libre 4'},
+  {d:11,t:'Libre', b:null, e:'Baja',  h:'Libre 5 — Recuperacion'},
+  {d:12,t:'Libre', b:null, e:'Baja',  h:'Libre 6 — Recuperacion / movilidad'},
+];
+
+const SES_NOM = {
+  D1:'D1 — Explosivo + Hip dom + Traccion',
+  D2:'D2 — Hip dom bilateral + Rodilla',
+  D3:'D3 — Explosivo + Rodilla unilateral + Press',
+  D4:'D4 — Rodilla unilateral + Hip dom unilateral',
+  Descanso:'Descanso',
+};
+
+const GRUPOS_DIA = {
+  D1:[{lbl:'INICIAL — Explosivo + Core antiextension',tipo:'par',n:2},
+      {lbl:'PAR — Hip dominante + Traccion vertical',tipo:'par',n:2},
+      {lbl:'TRI-SET — Rodilla + Traccion horizontal + Core',tipo:'triset',n:3}],
+  D2:[{lbl:'PAR 1 — Empuje horizontal + Movilidad superior',tipo:'par',n:2},
+      {lbl:'PAR 2 — Empuje vertical + Movilidad/estabilidad',tipo:'par',n:2},
+      {lbl:'TRI-SET — Empuje + Core antirrotacion + Carry',tipo:'triset',n:3}],
+  D3:[{lbl:'INICIAL — Explosivo + Core antiextension',tipo:'par',n:2},
+      {lbl:'PAR — Rodilla + Traccion vertical',tipo:'par',n:2},
+      {lbl:'TRI-SET — Hip dominante + Traccion horizontal + Core',tipo:'triset',n:3}],
+  D4:[{lbl:'PAR 1 — Empuje incline + Movilidad superior',tipo:'par',n:2},
+      {lbl:'PAR 2 — Empuje horizontal + Rodilla/movilidad',tipo:'par',n:2},
+      {lbl:'TRI-SET — Core-misc + Core antirrotacion + Carry',tipo:'triset',n:3}],
+};
+
+const EJS_FASES = {
+  F1:{
+    D1:['Hang Clean','Front Plank','Trap Bar Deadlift','Chin-up / Pull-up','Split Squat (Bottoms-up KB)','DB Row','In-line Chop'],
+    D2:['Bench Press','Spiderman pos. lat stretch','Half-kneeling Overhead Press','Supine Floor Slide','Push-up progression','Half-kneeling push-pull','Suitcase Carry'],
+    D3:['Hang Clean','Front Plank','Rear-foot-elevated Split Squat','Ring Row','Single-leg RDL (Straight-leg DL)','X-pull-down','In-line Lift'],
+    D4:['Dumbbell Incline Bench','Spiderman pos. lat stretch','Push-up progression','Squat Holds','Turkish Get-Up','Half-kneeling antirotation hold','Farmer Carry'],
+  },
+  F2:{
+    D1:['Hang Clean','Hard-style Front Plank','Trap Bar Deadlift','Chin-up / Pull-up','One-leg Squat','DB Row','In-line Iso Hold Chop'],
+    D2:['Bench Press','Spiderman pos. lat stretch','Standing Overhead Press','Supine Floor Slide','Push-up progression','Half-kneeling push-pull','Suitcase Carry'],
+    D3:['Hang Clean (65-75%)','Hard-style Front Plank','Rear-foot-elevated Split Squat','Ring Row','Single-leg RDL (Straight-leg DL)','X-pull-down','In-line Iso Hold Lift'],
+    D4:['Dumbbell Incline Bench','Spiderman pos. lat stretch','Push-up progression','Toe Touch Squat with medicine ball','Turkish Get-Up','Half-kneeling antirotation hold','Farmer Carry'],
+  },
+  F3:{
+    D1:['Hang Clean','Stability Ball Roll-out','Trap Bar Deadlift + Hurdle Jump','Chin-up + Med Ball Slam','One-leg Squat','DB Row','Dynamic Chop'],
+    D2:['Bench Press + Med Ball','Spiderman pos. lat stretch','Standing Overhead Press','Supine Floor Slide','Push-up progression','Dynamic push-pull','Suitcase Carry'],
+    D3:['Hang Clean (65-75%)','Stability Ball Roll-out','RFESS + Hurdle Hops','Ring Row + Med Ball Slam','Single-leg RDL (Straight-leg DL)','DB Row','Dynamic Lift'],
+    D4:['Dumbbell Incline Bench + Med Ball','Spiderman pos. lat stretch','Push-up progression','Toe Touch Squat with medicine ball','Turkish Get-Up','Standing antirotation hold','Farmer Carry'],
+  },
+  F4:{
+    D1:['Hang Clean','Stability Ball Roll-out','Trap Bar Deadlift + Hurdle Jump','Chin-up + Med Ball Slam','One-leg Squat','DB Row','Dynamic Chop'],
+    D2:['Bench Press + Med Ball','Spiderman pos. lat stretch','Standing Overhead Press','Supine Floor Slide','Push-up progression','Dynamic push-pull','Suitcase Carry'],
+    D3:['Hang Clean (65-75%)','Stability Ball Roll-out','RFESS + Hurdle Hops','Ring Row + Med Ball Slam','Single-leg RDL (Straight-leg DL)','DB Row','Dynamic Lift'],
+    D4:['Dumbbell Incline Bench + Med Ball','Spiderman pos. lat stretch','Push-up progression','Toe Touch Squat with medicine ball','Turkish Get-Up','Standing antirotation hold','Farmer Carry'],
+  },
+};
+
+const VARIANTES = {
+  'Hang Clean':['Hang Clean','High Pull','KB Swing / DB Snatch','Hang Clean pos. 2','Power Clean'],
+  'Hang Clean (65-75%)':['Hang Clean 65-75%','KB Swing','Hang Clean pos. 2'],
+  'Front Plank':['Front Plank','Front Plank rodillas','Hard-style Front Plank','Stability Ball Roll-out'],
+  'Hard-style Front Plank':['Hard-style Front Plank','Front Plank','Stability Ball Roll-out'],
+  'Stability Ball Roll-out':['Stability Ball Roll-out','Front Plank / Body Saw','Ab Wheel'],
+  'Trap Bar Deadlift':['Trap Bar Deadlift','Hip Thrust','Single-leg RDL','Trap Bar + Hurdle Jump'],
+  'Trap Bar Deadlift + Hurdle Jump':['Trap Bar + Hurdle Jump','Trap Bar Deadlift solo','Trap Bar + Trineo'],
+  'Chin-up / Pull-up':['Chin-up / Pull-up','Chin-up asistido','Ring Row / Lat pulldown','Chin-up lastrado'],
+  'Chin-up + Med Ball Slam':['Chin-up + Med Ball Slam','Chin-up + slam ligero'],
+  'Split Squat (Bottoms-up KB)':['Split Squat KB bottoms-up','Split Squat a cajon','RFESS','One-leg Squat'],
+  'One-leg Squat':['One-leg Squat','RFESS','Split Squat a cajon','Step-up bajo'],
+  'Rear-foot-elevated Split Squat':['RFESS','Split Squat sin elevar','Step-up bajo','One-leg Squat'],
+  'RFESS + Hurdle Hops':['RFESS + Hurdle Hops','RFESS solo','RFESS + Trineo'],
+  'DB Row':['DB Row','TRX Row / Seated cable row','Pendlay Row'],
+  'Ring Row':['Ring Row','TRX Row mas vertical','Ring Row pies elevados'],
+  'Ring Row + Med Ball Slam':['Ring Row + Med Ball Slam','Ring Row + slam ligero'],
+  'X-pull-down':['X-pull-down','Lat pulldown','Straight-arm pulldown'],
+  'Bench Press':['Bench Press','DB Bench / Floor Press','Push-up','Close-grip Bench'],
+  'Bench Press + Med Ball':['Bench Press + Med Ball','Bench Press','Close-grip Bench'],
+  'Dumbbell Incline Bench':['Dumbbell Incline Bench','Incline Push-up','Incline + Med Ball'],
+  'Dumbbell Incline Bench + Med Ball':['Dumbbell Incline Bench + Med Ball','Dumbbell Incline Bench'],
+  'Half-kneeling Overhead Press':['Half-kneeling OHP (KB)','Seated DB Press','Standing OHP'],
+  'Standing Overhead Press':['Standing Barbell OHP','Half-kneeling OHP (KB)','Push Press'],
+  'Push-up progression':['Push-up suelo','Push-up inclinado / rodillas','Push-up pies elevados','Push-up lastrado'],
+  'In-line Chop':['In-line Chop','Half-kneeling Chop','In-line Iso Hold Chop','Dynamic Chop'],
+  'In-line Lift':['In-line Lift','Half-kneeling Lift','In-line Iso Hold Lift','Dynamic Lift'],
+  'In-line Iso Hold Chop':['In-line Iso Hold Chop','In-line Chop','Dynamic Chop'],
+  'In-line Iso Hold Lift':['In-line Iso Hold Lift','In-line Lift','Dynamic Lift'],
+  'Dynamic Chop':['Dynamic Chop','In-line Iso Hold Chop','In-line Chop'],
+  'Dynamic Lift':['Dynamic Lift','In-line Iso Hold Lift','In-line Lift'],
+  'Half-kneeling push-pull':['Half-kneeling push-pull','Seated cable row + press','Dynamic push-pull'],
+  'Dynamic push-pull':['Dynamic push-pull','Half-kneeling push-pull'],
+  'Half-kneeling antirotation hold':['Half-kneeling antirotation hold','Pallof press isometrico','Standing antirotation hold'],
+  'Standing antirotation hold':['Standing antirotation hold','Half-kneeling antirotation hold','Pallof press caminando'],
+  'Suitcase Carry':['Suitcase Carry','Farmer Walk bilateral','Bottoms-up KB walk'],
+  'Farmer Carry':['Farmer Carry bilateral','Suitcase Carry'],
+  'Turkish Get-Up':['Turkish Get-Up completo','Get-up hasta puente alto','Get-up hasta codo'],
+  'Squat Holds':['Squat Holds isometrico','Wall Sit'],
+  'Supine Floor Slide':['Supine Floor Slide','Wall Slide de pie'],
+  'Spiderman pos. lat stretch':['Spiderman lat stretch','Open book','World greatest stretch'],
+  'Toe Touch Squat with medicine ball':['Toe Touch Squat (med ball)','Sentadilla a cajon','Goblet Squat'],
+  'Single-leg RDL (Straight-leg DL)':['Single-leg RDL','SLDL con apoyo','SLDL con KB pesada'],
+};
+
+// ══════════════════════════════════════════════════════
+// FIREBASE CONFIG
+// ══════════════════════════════════════════════════════
+const FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyAaG8nflb_tVtCTYV6zdg0e2a54cooyEGQ',
+  authDomain: 'entreno-pro.firebaseapp.com',
+  projectId: 'entreno-pro',
+  storageBucket: 'entreno-pro.firebasestorage.app',
+  messagingSenderId: '213666573189',
+  appId: '1:213666573189:web:30e3c7b101a251735eb2ec'
+};
+
+let fbApp = null, fbDb = null, fbAuth = null, fbUser = null, fbReady = false;
+let fbUnsubConfig = null, fbUnsubSesiones = null;
+
+// ══════════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════════
+let ST = {
+  dia: 1, sem: 1,
+  cicloAnclaje: null,
+  programaInicio: '2026-06-12',
+  sliders: {d:0, f:1, s:3},
+  diaBoyle: {},
+  planDia: {},
+  sesiones: {},   // cache local: {fecha: {...sesion}}
+  sets: {},       // cache local: {"fecha_ejslug": {sets:[...], checkManual:false}}
+  timerInicio: null,
+  timerActivo: false,
+  _v: 2,
+};
+
+// ══════════════════════════════════════════════════════
+// LOCALSTORAGE
+// ══════════════════════════════════════════════════════
+function load() {
+  try {
+    const x = localStorage.getItem(LS_KEY);
+    if (x) {
+      const p = JSON.parse(x);
+      ST = Object.assign(ST, p);
+      if (!ST.sliders) ST.sliders = {d:0,f:1,s:3};
+      if (!ST.diaBoyle) ST.diaBoyle = {};
+      if (!ST.planDia) ST.planDia = {};
+      if (!ST.sesiones) ST.sesiones = {};
+      if (!ST.sets) ST.sets = {};
+    }
+  } catch(e) { console.warn('load error', e); }
+}
+
+function save() {
+  try {
+    ST._savedAt = Date.now();
+    localStorage.setItem(LS_KEY, JSON.stringify(ST));
+    if (fbReady) saveConfig();
+  } catch(e) { console.warn('save error', e); }
+}
+
+// ══════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════
+function ejSlug(ej) {
+  return ej.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function setDocId(fecha, ej) {
+  return fecha + '_' + ejSlug(ej);
+}
+
+function hoyLocal() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function fmtFechaCorta(f) {
+  const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const parts = f.split('-');
+  return parseInt(parts[2]) + ' ' + meses[parseInt(parts[1])-1];
+}
+
+function getFaseActual(sem) {
+  const s = parseInt(sem) || 1;
+  if (s <= 3) return 'F1';
+  if (s <= 6) return 'F2';
+  if (s <= 9) return 'F3';
+  return 'F4';
+}
+
+function getDiaCicloHoy() {
+  if (!ST.cicloAnclaje) return ST.dia;
+  try {
+    const anclaje = new Date(ST.cicloAnclaje + 'T00:00:00');
+    const hoy = new Date(hoyLocal() + 'T00:00:00');
+    const diff = Math.round((hoy - anclaje) / 86400000);
+    return ((diff % 12) + 12) % 12 + 1;
+  } catch(e) { return ST.dia; }
+}
+
+function getDiaBoyleParaDia(diaNum) {
+  const hoy = hoyLocal();
+  if (ST.planDia && ST.planDia[hoy]) {
+    const p = ST.planDia[hoy];
+    return p === 'Descanso' ? null : p;
+  }
+  if (ST.diaBoyle && ST.diaBoyle[diaNum] != null) {
+    const v = ST.diaBoyle[diaNum];
+    const b = typeof v === 'object' ? v.b : v;
+    return b === 'Descanso' ? null : b;
+  }
+  return CICLO[(diaNum - 1) % 12].b;
+}
+
+function getEjsHoy() {
+  const dia = getDiaCicloHoy();
+  const dB = getDiaBoyleParaDia(dia);
+  if (!dB || dB === 'Descanso') return [];
+  const fase = getFaseActual(ST.sem);
+  return (EJS_FASES[fase] && EJS_FASES[fase][dB]) || [];
+}
+
+function getBloquesHoy() {
+  const dia = getDiaCicloHoy();
+  const dB = getDiaBoyleParaDia(dia);
+  if (!dB || !GRUPOS_DIA[dB]) return null;
+  const ejs = getEjsHoy();
+  if (!ejs.length) return null;
+  const grupos = GRUPOS_DIA[dB];
+  const bloques = [];
+  let idx = 0;
+  for (let gi = 0; gi < grupos.length; gi++) {
+    const g = grupos[gi];
+    const last = gi === grupos.length - 1;
+    const slice = last ? ejs.slice(idx) : ejs.slice(idx, idx + g.n);
+    idx += g.n;
+    if (slice.length) bloques.push({lbl:g.lbl, tipo:g.tipo, ejs:slice});
+  }
+  return bloques.length ? bloques : null;
+}
+
+// ══════════════════════════════════════════════════════
+// HISTORIAL DE PESOS
+// ══════════════════════════════════════════════════════
+function getHistorialEj(ej) {
+  const slug = ejSlug(ej);
+  const results = [];
+  const sets = ST.sets || {};
+  Object.keys(sets).forEach(function(key) {
+    if (key.length < 12) return;
+    const keySlug = key.substring(11); // "YYYY-MM-DD_" = 11 chars
+    if (keySlug !== slug) return;
+    const fecha = key.substring(0, 10);
+    const data = sets[key];
+    const arr = (data.sets || []).filter(function(s) { return s && (s.p > 0 || s.r > 0); });
+    if (arr.length > 0) results.push({fecha: fecha, sets: arr});
+  });
+  return results.sort(function(a, b) { return b.fecha.localeCompare(a.fecha); }).slice(0, 3);
+}
+
+function fmtSetChip(s, idx) {
+  if (!s) return '';
+  const rpe = s.rpe || 0;
+  const cls = rpe >= 9 ? 'r9' : rpe >= 8 ? 'r8' : '';
+  const v = s.v ? ' <span style="font-size:9px;opacity:.7">'+s.v+'</span>' : '';
+  return '<span class="set-chip ' + cls + '">S'+(idx+1)+': '+(s.p||0)+'×'+(s.r||0)+' R'+(rpe||'?')+v+'</span>';
+}
+
+// ══════════════════════════════════════════════════════
+// FIREBASE — SAVE
+// ══════════════════════════════════════════════════════
+let _cfgTimer = null;
+function saveConfig() {
+  if (!fbReady || !fbUser) return;
+  clearTimeout(_cfgTimer);
+  _cfgTimer = setTimeout(function() {
+    const cfg = {
+      dia: ST.dia, sem: ST.sem,
+      cicloAnclaje: ST.cicloAnclaje || null,
+      programaInicio: ST.programaInicio || null,
+      sliders: ST.sliders || {d:0,f:1,s:3},
+      diaBoyle: ST.diaBoyle || {},
+      planDia: ST.planDia || {},
+      _v: 2,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    fbDb.collection(FB_COL).doc(fbUser.uid).set(cfg, {merge: true})
+      .catch(function(e) { console.warn('saveConfig error', e); });
+  }, 2000);
+}
+
+let _sesTimers = {};
+function saveSesion(fecha, data) {
+  if (!fbReady || !fbUser) return;
+  clearTimeout(_sesTimers[fecha]);
+  _sesTimers[fecha] = setTimeout(function() {
+    const doc = Object.assign({}, data, {
+      fecha: fecha,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    fbDb.collection(FB_COL).doc(fbUser.uid)
+      .collection('sesiones').doc(fecha).set(doc, {merge: true})
+      .catch(function(e) { console.warn('saveSesion error', e); });
+  }, 500);
+}
+
+function saveSet(fecha, ej) {
+  if (!fbReady || !fbUser) return;
+  const docId = setDocId(fecha, ej);
+  const data = ST.sets[docId] || {sets: []};
+  const doc = Object.assign({}, data, {
+    fecha: fecha,
+    ejercicio: ej,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+  });
+  fbDb.collection(FB_COL).doc(fbUser.uid)
+    .collection('sets').doc(docId).set(doc)
+    .catch(function(e) { console.warn('saveSet error', e); });
+}
+
+// ══════════════════════════════════════════════════════
+// FIREBASE — LOAD + INIT
+// ══════════════════════════════════════════════════════
+function dotColor(c) {
+  var colors = {ok:'var(--green)',saving:'var(--blue)',error:'var(--red)',off:'var(--text3)'};
+  document.getElementById('fb-dot').style.background = colors[c] || colors.off;
+}
+
+function initFirebase() {
+  try {
+    fbApp = firebase.initializeApp(FIREBASE_CONFIG);
+    fbDb = firebase.firestore();
+    fbAuth = firebase.auth();
+    fbAuth.onAuthStateChanged(function(user) {
+      if (user) {
+        fbUser = user; fbReady = true;
+        dotColor('saving');
+        renderAuthRow(user);
+        cargarDesdeFirebase();
+      } else {
+        fbUser = null; fbReady = false;
+        dotColor('off');
+        renderAuthRow(null);
+        if (fbUnsubConfig) { fbUnsubConfig(); fbUnsubConfig = null; }
+        if (fbUnsubSesiones) { fbUnsubSesiones(); fbUnsubSesiones = null; }
+      }
+    });
+  } catch(e) { console.error('Firebase init error', e); dotColor('error'); }
+}
+
+async function cargarDesdeFirebase() {
+  if (!fbReady || !fbUser) return;
+  try {
+    // 1. Config doc
+    const cfgDoc = await fbDb.collection(FB_COL).doc(fbUser.uid).get();
+    if (cfgDoc.exists) {
+      const d = cfgDoc.data();
+      if (d.dia != null) ST.dia = d.dia;
+      if (d.sem != null) ST.sem = d.sem;
+      if (d.cicloAnclaje != null) ST.cicloAnclaje = d.cicloAnclaje;
+      if (d.programaInicio) ST.programaInicio = d.programaInicio;
+      if (d.sliders) ST.sliders = d.sliders;
+      if (d.diaBoyle) ST.diaBoyle = d.diaBoyle;
+      if (d.planDia) ST.planDia = Object.assign(ST.planDia || {}, d.planDia);
+    }
+    // 2. Sets recientes (ultimo mes de cada ejercicio de la sesion actual)
+    const hace60 = new Date(); hace60.setDate(hace60.getDate() - 60);
+    const fechaMin = hace60.getFullYear() + '-' + String(hace60.getMonth()+1).padStart(2,'0') + '-' + String(hace60.getDate()).padStart(2,'0');
+    const setsSnap = await fbDb.collection(FB_COL).doc(fbUser.uid)
+      .collection('sets').where('fecha', '>=', fechaMin).get();
+    setsSnap.forEach(function(doc) {
+      const d = doc.data();
+      if (d.fecha && d.ejercicio && d.sets) {
+        const key = setDocId(d.fecha, d.ejercicio);
+        ST.sets[key] = {sets: d.sets, checkManual: d.checkManual || false};
+      }
+    });
+    // 3. Sesiones recientes (para historial)
+    const sesSnap = await fbDb.collection(FB_COL).doc(fbUser.uid)
+      .collection('sesiones').where('fecha', '>=', fechaMin).get();
+    sesSnap.forEach(function(doc) {
+      const d = doc.data();
+      if (d.fecha) ST.sesiones[d.fecha] = d;
+    });
+    save();
+    renders.hoy(); renders.entreno(); renders.config();
+    dotColor('ok');
+    suscribirCambios();
+  } catch(e) {
+    console.error('cargarDesdeFirebase error', e);
+    dotColor('error');
+  }
+}
+
+function suscribirCambios() {
+  if (fbUnsubConfig) fbUnsubConfig();
+  fbUnsubConfig = fbDb.collection(FB_COL).doc(fbUser.uid)
+    .onSnapshot(function(doc) {
+      if (!doc.exists) return;
+      const d = doc.data();
+      const remoto = d.updatedAt ? d.updatedAt.toMillis() : 0;
+      const local = ST._savedAt || 0;
+      if (remoto > local + 3000) {
+        if (d.sliders) ST.sliders = d.sliders;
+        if (d.dia != null) ST.dia = d.dia;
+        if (d.sem != null) ST.sem = d.sem;
+        if (d.cicloAnclaje != null) ST.cicloAnclaje = d.cicloAnclaje;
+        if (d.planDia) ST.planDia = Object.assign(ST.planDia || {}, d.planDia);
+        save();
+        renders.hoy(); renders.config();
+        toast('🔄 Datos actualizados');
+      }
+    }, function(e) { console.warn('snapshot error', e); });
+}
+
+function loginFirebase() {
+  if (!fbAuth) return;
+  fbAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+    .catch(function(e) { console.error('login error', e); });
+}
+
+function logoutFirebase() {
+  if (!fbAuth) return;
+  fbAuth.signOut();
+}
+
+// ══════════════════════════════════════════════════════
+// NAVEGACION
+// ══════════════════════════════════════════════════════
+function ir(pantalla) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('s-' + pantalla).classList.add('active');
+  document.getElementById('nav-' + pantalla).classList.add('active');
+  if (pantalla === 'hoy') renders.hoy();
+  if (pantalla === 'entreno') renders.entreno();
+  if (pantalla === 'config') renders.config();
+}
+
+function toast(msg, ms) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(toast._to);
+  toast._to = setTimeout(function() { t.style.opacity = '0'; }, ms || 2500);
+}
+
+// ══════════════════════════════════════════════════════
+// RENDERS
+// ══════════════════════════════════════════════════════
+const renders = {
+  hoy: function() {
+    const dia = getDiaCicloHoy();
+    const cicloItem = CICLO[(dia - 1) % 12];
+    const dB = getDiaBoyleParaDia(dia);
+    const fase = getFaseActual(ST.sem);
+    const sl = ST.sliders || {d:0,f:1,s:3};
+
+    // Dia info
+    let badgeHtml = '';
+    if (dB) {
+      badgeHtml = '<span class="dia-badge badge-' + dB + '">' + dB + ' — ' + (SES_NOM[dB] || dB) + '</span>';
+    } else {
+      badgeHtml = '<span class="dia-badge badge-desc">🛌 Descanso / Movilidad</span>';
+    }
+    document.getElementById('hoy-dia-info').innerHTML =
+      '<div class="dia-meta">Día <strong>' + dia + '</strong> de ciclo · Semana <strong>' + ST.sem + '</strong> · Fase <strong>' + fase + '</strong></div>' +
+      badgeHtml +
+      '<div class="dia-desc">' + cicloItem.h + '</div>';
+
+    // Semáforo
+    let semCls, semIcon, semTit, semSub;
+    if (sl.d >= 4) {
+      semCls = 'sr'; semIcon = '🔴'; semTit = 'Rojo — No entrenes hoy'; semSub = 'Protocolo de movilidad suave únicamente';
+    } else if (sl.f >= 4) {
+      semCls = 'sa'; semIcon = '🟡'; semTit = 'Amarillo — Reduce volumen 20%'; semSub = 'Menos series, mismos ejercicios';
+    } else {
+      semCls = 'sv'; semIcon = '🟢'; semTit = 'Verde — Entrena normal'; semSub = 'Fatiga y dolor dentro del rango óptimo';
+    }
+    document.getElementById('hoy-sem').innerHTML =
+      '<div class="sem ' + semCls + '"><div class="sem-icon">' + semIcon + '</div><div class="sem-body"><div class="sem-titulo">' + semTit + '</div><div class="sem-sub">' + semSub + '</div></div></div>';
+
+    // Sliders
+    ['d','f','s'].forEach(function(k) {
+      const el = document.getElementById('sl-' + k);
+      const vEl = document.getElementById('sv-' + k);
+      if (el) el.value = sl[k] || 0;
+      if (vEl) vEl.textContent = sl[k] || 0;
+    });
+  },
+
+  entreno: function() {
+    const dia = getDiaCicloHoy();
+    const dB = getDiaBoyleParaDia(dia);
+    const fase = getFaseActual(ST.sem);
+    const hoy = hoyLocal();
+    const bloques = getBloquesHoy();
+    const cont = document.getElementById('entreno-bloques');
+
+    if (!dB || !bloques) {
+      cont.innerHTML = '<div class="card" style="padding:1rem;text-align:center;color:var(--text2);font-size:14px;">🛌 Hoy es día de descanso.<br>Movilidad suave si quieres.</div>';
+      document.getElementById('btn-finalizar').disabled = true;
+      return;
+    }
+
+    let html = '';
+    bloques.forEach(function(bloque) {
+      html += '<div class="bloque-lbl">' + bloque.lbl + '</div>';
+      bloque.ejs.forEach(function(ej) {
+        const docId = setDocId(hoy, ej);
+        const setsHoy = ((ST.sets[docId] || {}).sets || []).filter(Boolean);
+        const historial = getHistorialEj(ej);
+
+        // Nombre
+        html += '<div class="ej-card">';
+        html += '<div class="ej-nombre-row"><span class="ej-nombre">' + ej + '</span></div>';
+
+        // Historial inline
+        html += '<div class="ej-hist">';
+        if (historial.length === 0) {
+          html += '<div class="hist-vacio">Primera sesión con este ejercicio</div>';
+        } else {
+          historial.forEach(function(h, hi) {
+            const cls = hi === 0 ? 'hist-row reciente' : 'hist-row';
+            const setsStr = h.sets.map(function(s, si) {
+              const rpe = s.rpe || 0;
+              const rpeStr = rpe ? ' R' + rpe : '';
+              const col = rpe >= 9 ? 'color:var(--red-text)' : rpe >= 8 ? 'color:var(--orange-text)' : '';
+              return '<span style="' + col + '">' + (s.p||0) + '×' + (s.r||0) + rpeStr + '</span>';
+            }).join(' · ');
+            html += '<div class="' + cls + '"><span class="hist-fecha">' + fmtFechaCorta(h.fecha) + '</span><span class="hist-dato">' + setsStr + '</span></div>';
+          });
+        }
+        html += '</div>';
+
+        // Sets de hoy
+        html += '<div class="ej-sets-hoy">';
+        if (setsHoy.length === 0) {
+          html += '<span class="no-sets-hint">Sin series aún</span>';
+        } else {
+          setsHoy.forEach(function(s, i) { html += fmtSetChip(s, i); });
+        }
+        html += '</div>';
+
+        // Botón añadir
+        html += '<button class="btn-add-set" onclick="abrirMoSet(' + JSON.stringify(ej) + ')"><i class="ti ti-plus"></i> Añadir serie</button>';
+        html += '</div>'; // ej-card
+      });
+    });
+
+    cont.innerHTML = html;
+
+    // Habilitar Finalizar si hay al menos una serie hoy
+    const haySeries = Object.keys(ST.sets).some(function(k) {
+      return k.startsWith(hoy + '_') && ((ST.sets[k].sets || []).filter(Boolean).length > 0);
+    });
+    document.getElementById('btn-finalizar').disabled = !haySeries;
+
+    // Timer (restaurar si estaba activo)
+    if (ST.timerActivo && ST.timerInicio) {
+      document.getElementById('btn-tstart').style.display = 'none';
+      document.getElementById('btn-tend').style.display = 'block';
+      if (!window._timerInterval) arrancarIntervalTimer();
+    }
+  },
+
+  config: function() {
+    document.getElementById('cfg-sem').textContent = ST.sem || 1;
+    const ancEl = document.getElementById('cfg-anclaje');
+    if (ancEl) ancEl.value = ST.cicloAnclaje || '';
+  }
+};
+
+function renderAuthRow(user) {
+  const row = document.getElementById('auth-row');
+  if (!row) return;
+  if (user) {
+    row.innerHTML = '<div><div style="font-size:13px;font-weight:600">' + (user.displayName || user.email) + '</div><div style="font-size:11px;color:var(--text3)">' + user.email + '</div></div><button onclick="logoutFirebase()" style="border:none;background:var(--red-bg);color:var(--red-text);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;">Salir</button>';
+  } else {
+    row.innerHTML = '<span style="font-size:13px;color:var(--text2)">Sin cuenta</span><button onclick="loginFirebase()" style="border:none;background:var(--blue);color:#fff;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;">Entrar con Google</button>';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// SLIDERS
+// ══════════════════════════════════════════════════════
+function sliderChange(k, val) {
+  if (!ST.sliders) ST.sliders = {d:0,f:1,s:3};
+  ST.sliders[k] = parseInt(val);
+  document.getElementById('sv-' + k).textContent = val;
+  // Actualizar semáforo en tiempo real
+  const sl = ST.sliders;
+  const sem = document.querySelector('#hoy-sem .sem');
+  if (sem) {
+    let cls, icon, tit, sub;
+    if (sl.d >= 4) { cls = 'sr'; icon = '🔴'; tit = 'Rojo — No entrenes hoy'; sub = 'Protocolo de movilidad suave únicamente'; }
+    else if (sl.f >= 4) { cls = 'sa'; icon = '🟡'; tit = 'Amarillo — Reduce volumen 20%'; sub = 'Menos series, mismos ejercicios'; }
+    else { cls = 'sv'; icon = '🟢'; tit = 'Verde — Entrena normal'; sub = 'Fatiga y dolor dentro del rango óptimo'; }
+    sem.className = 'sem ' + cls;
+    sem.querySelector('.sem-icon').textContent = icon;
+    sem.querySelector('.sem-titulo').textContent = tit;
+    sem.querySelector('.sem-sub').textContent = sub;
+  }
+  clearTimeout(sliderChange._t);
+  sliderChange._t = setTimeout(save, 800);
+}
+
+// ══════════════════════════════════════════════════════
+// CONFIGURACION
+// ══════════════════════════════════════════════════════
+function cambiarSem(delta) {
+  ST.sem = Math.max(1, Math.min(12, (ST.sem || 1) + delta));
+  document.getElementById('cfg-sem').textContent = ST.sem;
+  save();
+  renders.hoy();
+}
+
+function cambiarAnclaje(val) {
+  ST.cicloAnclaje = val || null;
+  save();
+  renders.hoy();
+}
+
+// ══════════════════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════════════════
+function fmtTime(ms) {
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sc = s % 60;
+  return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(sc).padStart(2,'0');
+}
+
+function arrancarIntervalTimer() {
+  clearInterval(window._timerInterval);
+  window._timerInterval = setInterval(function() {
+    if (ST.timerInicio) {
+      document.getElementById('timer-display').textContent = fmtTime(Date.now() - ST.timerInicio);
+    }
+  }, 1000);
+}
+
+function startTimer() {
+  ST.timerInicio = Date.now();
+  ST.timerActivo = true;
+  save();
+  document.getElementById('btn-tstart').style.display = 'none';
+  document.getElementById('btn-tend').style.display = 'block';
+  const ini = new Date(ST.timerInicio).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('timer-info').textContent = 'Inicio: ' + ini;
+  arrancarIntervalTimer();
+}
+
+// ══════════════════════════════════════════════════════
+// MODAL AÑADIR SERIE
+// ══════════════════════════════════════════════════════
+let _moEj = null;
+let _moRpe = null;
+let _moVar = null;
+
+function abrirMoSet(ej) {
+  _moEj = ej;
+  const hoy = hoyLocal();
+  const docId = setDocId(hoy, ej);
+  const setsHoy = ((ST.sets[docId] || {}).sets || []).filter(Boolean);
+  const numSerie = setsHoy.length + 1;
+
+  document.getElementById('mo-set-titulo').textContent = ej;
+  document.getElementById('mo-set-sub').textContent = 'Serie ' + numSerie;
+
+  // Pre-rellenar con último valor si existe
+  const ultimo = setsHoy[setsHoy.length - 1];
+  document.getElementById('mo-peso').value = ultimo ? ultimo.p : '';
+  document.getElementById('mo-reps').value = ultimo ? ultimo.r : '';
+
+  // RPE
+  _moRpe = ultimo ? (ultimo.rpe || null) : null;
+  renderRpeGrid();
+
+  // Variante
+  _moVar = null;
+  renderVarOpts(ej);
+
+  document.getElementById('mo-nota').value = '';
+  document.getElementById('mo-set').classList.add('open');
+
+  // Focus peso
+  setTimeout(function() { document.getElementById('mo-peso').focus(); }, 300);
+}
+
+function renderRpeGrid() {
+  const grid = document.getElementById('rpe-grid');
+  grid.innerHTML = '';
+  [6,7,8,9,10].forEach(function(v) {
+    const btn = document.createElement('button');
+    btn.className = 'rpe-btn' + (_moRpe === v ? (' sel' + (v >= 9 ? ' rhi' : '')) : '');
+    btn.textContent = v;
+    btn.onclick = function() { _moRpe = v; renderRpeGrid(); };
+    grid.appendChild(btn);
+  });
+}
+
+function renderVarOpts(ej) {
+  const cont = document.getElementById('var-opts');
+  const opts = VARIANTES[ej] || [ej];
+  cont.innerHTML = '';
+  opts.forEach(function(v, i) {
+    const btn = document.createElement('button');
+    btn.className = 'var-opt' + (i === 0 || v === _moVar ? ' sel' : '');
+    btn.textContent = v;
+    if (i === 0) _moVar = v;
+    btn.onclick = function() {
+      _moVar = v;
+      cont.querySelectorAll('.var-opt').forEach(function(b) { b.classList.remove('sel'); });
+      btn.classList.add('sel');
+    };
+    cont.appendChild(btn);
+  });
+  if (!_moVar && opts.length) _moVar = opts[0];
+}
+
+function cerrarMoSet() {
+  document.getElementById('mo-set').classList.remove('open');
+  _moEj = null;
+}
+
+function guardarSet() {
+  if (!_moEj) return;
+  const peso = parseFloat(document.getElementById('mo-peso').value) || 0;
+  const reps = parseInt(document.getElementById('mo-reps').value) || 0;
+  const rpe = _moRpe || 7;
+  const nota = document.getElementById('mo-nota').value.trim();
+  const ej = _moEj;
+  const hoy = hoyLocal();
+  const docId = setDocId(hoy, ej);
+
+  if (!ST.sets[docId]) ST.sets[docId] = {sets: [], checkManual: false};
+  const setObj = {p: peso, r: reps, rpe: rpe};
+  if (_moVar && _moVar !== ej) setObj.v = _moVar;
+  if (nota) setObj.nota = nota;
+  ST.sets[docId].sets.push(setObj);
+
+  save();
+  saveSet(hoy, ej);
+  autoRegistrarSesion();
+  cerrarMoSet();
+  renders.entreno();
+  toast('Serie guardada ✓');
+}
+
+// ══════════════════════════════════════════════════════
+// SESIÓN — AUTO REGISTRO Y FINALIZAR
+// ══════════════════════════════════════════════════════
+function autoRegistrarSesion() {
+  try {
+    const hoy = hoyLocal();
+    const dia = getDiaCicloHoy();
+    const dB = getDiaBoyleParaDia(dia);
+    if (!dB) return;
+    const fase = getFaseActual(ST.sem);
+    const s = ST.sem || 1;
+    const semEnFase = ((s - 1) % 3) + 1;
+
+    // Ejercicios realizados hoy
+    const ejsRealizados = [];
+    Object.keys(ST.sets).forEach(function(key) {
+      if (!key.startsWith(hoy + '_')) return;
+      const ejSlugKey = key.substring(11);
+      const data = ST.sets[key];
+      const arr = (data.sets || []).filter(Boolean);
+      if (arr.length > 0) {
+        // Encontrar nombre original del ejercicio
+        const ej = data.ejercicio || ejSlugKey;
+        ejsRealizados.push({ej: ej, sets: arr});
+      }
+    });
+    if (!ejsRealizados.length) return;
+
+    const sesData = {
+      fecha: hoy, diaCiclo: dia, fase: fase,
+      semana: ST.sem, semEnFase: semEnFase,
+      diaBoyleReal: dB, completado: true,
+      ejerciciosRealizados: ejsRealizados,
+      timestamp: Date.now(),
+    };
+    ST.sesiones[hoy] = Object.assign(ST.sesiones[hoy] || {}, sesData);
+    saveSesion(hoy, ST.sesiones[hoy]);
+  } catch(e) { console.warn('autoRegistrarSesion', e); }
+}
+
+function confirmarFinalizar() {
+  const hoy = hoyLocal();
+  const haySeries = Object.keys(ST.sets).some(function(k) {
+    return k.startsWith(hoy + '_') && ((ST.sets[k].sets || []).filter(Boolean).length > 0);
+  });
+  if (!haySeries) { toast('Añade al menos una serie antes de finalizar'); return; }
+
+  let elapsed = ST.timerInicio ? fmtTime(Date.now() - ST.timerInicio) : '';
+  const msg = 'Finalizar sesión de hoy' + (elapsed ? ' (' + elapsed + ')' : '') + '\n\n¿Confirmas?';
+  if (!confirm(msg)) return;
+
+  // Parar timer
+  clearInterval(window._timerInterval);
+  window._timerInterval = null;
+  const durMin = ST.timerInicio ? Math.round((Date.now() - ST.timerInicio) / 60000) : 0;
+  ST.timerActivo = false;
+
+  // Guardar sesion completa
+  const sesPrev = ST.sesiones[hoy] || {};
+  const finalSes = Object.assign({}, sesPrev, {
+    completado: true, confirmado: true,
+    duracion_min: durMin,
+    duracion_str: elapsed,
+    lockTimestamp: Date.now(),
+  });
+  ST.sesiones[hoy] = finalSes;
+  saveSesion(hoy, finalSes);
+  save();
+  renders.entreno();
+  toast('✅ Sesión guardada — ' + durMin + ' min');
+}
+
+// ══════════════════════════════════════════════════════
+// IMPORTACIÓN DESDE APP V1
+// ══════════════════════════════════════════════════════
+function logImport(msg) {
+  const el = document.getElementById('import-log');
+  el.style.display = 'block';
+  el.textContent += msg + '\n';
+  el.scrollTop = el.scrollHeight;
+}
+
+async function iniciarImportDryRun() { await runImport(true); }
+async function iniciarImport() { await runImport(false); }
+
+async function runImport(dryRun) {
+  if (!fbReady || !fbUser) { alert('Inicia sesión primero'); return; }
+  const el = document.getElementById('import-log');
+  el.textContent = '';
+  el.style.display = 'block';
+
+  logImport((dryRun ? '🔍 SIMULACIÓN (no se escribirá nada)' : '🚀 IMPORTACIÓN REAL') + ' — ' + new Date().toLocaleTimeString());
+  logImport('Leyendo datos del app anterior...');
+
+  try {
+    // Leer blob del app viejo
+    const oldDoc = await fbDb.collection('usuarios').doc(fbUser.uid).get();
+    if (!oldDoc.exists || !oldDoc.data().datos) {
+      logImport('❌ No se encontraron datos en la app anterior.');
+      logImport('   (¿Estás logueado con la misma cuenta de Google?)');
+      return;
+    }
+    const oldST = JSON.parse(oldDoc.data().datos);
+    logImport('✅ Datos encontrados en app anterior');
+
+    // Estadísticas del blob
+    const nSesiones = Object.keys(oldST.historialFechas || {}).length;
+    const nSets = Object.keys(oldST.sets || {}).length;
+    const nPlanning = Object.keys(oldST.planDia || {}).length;
+    logImport('   Sesiones (historialFechas): ' + nSesiones);
+    logImport('   Claves de sets: ' + nSets);
+    logImport('   Días de planning: ' + nPlanning);
+    logImport('');
+
+    // MIGRAR CONFIG
+    logImport('── Config ────────────────────────');
+    const newCfg = {
+      dia: oldST.dia || 1,
+      sem: oldST.sem || 1,
+      cicloAnclaje: oldST.cicloAnclaje || null,
+      programaInicio: oldST.programaInicio || '2026-06-12',
+      sliders: oldST.sliders || {d:0,f:1,s:3},
+      diaBoyle: oldST.diaBoyle || {},
+      planDia: oldST.planDia || {},
+      _v: 2,
+    };
+    if (!dryRun) {
+      await fbDb.collection(FB_COL).doc(fbUser.uid).set(
+        Object.assign(newCfg, {updatedAt: firebase.firestore.FieldValue.serverTimestamp()}),
+        {merge: true}
+      );
+      ST.dia = newCfg.dia; ST.sem = newCfg.sem;
+      ST.cicloAnclaje = newCfg.cicloAnclaje;
+      ST.sliders = newCfg.sliders;
+      ST.diaBoyle = newCfg.diaBoyle;
+      ST.planDia = newCfg.planDia;
+    }
+    logImport('✅ Config: sem=' + newCfg.sem + ', día=' + newCfg.dia + (dryRun ? ' (simulado)' : ' (guardado)'));
+
+    // MIGRAR SESIONES desde historialFechas
+    logImport('');
+    logImport('── Sesiones ──────────────────────');
+    const hist = oldST.historialFechas || {};
+    let sesCreadas = 0;
+    const batch_ses = [];
+    Object.keys(hist).sort().forEach(function(fecha) {
+      const h = hist[fecha];
+      if (!h || !h.completado) return;
+      const sesDoc = {
+        fecha: fecha,
+        diaCiclo: h.diaCiclo || 0,
+        fase: h.fase || '',
+        semana: h.semana || 1,
+        semEnFase: h.semEnFase || 1,
+        diaBoyleProg: h.diaBoyleProg || null,
+        diaBoyleReal: h.diaBoyleReal || null,
+        variacion: h.variacion || false,
+        ejsSustituidos: h.ejsSustituidos || [],
+        ejerciciosRealizados: h.ejerciciosRealizados || [],
+        duracion_min: h.duracion_min || 0,
+        completado: true,
+        confirmado: true,
+        lockTimestamp: h.timestamp || Date.now(),
+        nota: h.nota || '',
+        timestamp: h.timestamp || Date.now(),
+        recuperado: h.recuperado || false,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      };
+      ST.sesiones[fecha] = sesDoc;
+      batch_ses.push({fecha: fecha, doc: sesDoc});
+      sesCreadas++;
+    });
+    if (!dryRun) {
+      // Escribir en lotes de 10 para no saturar
+      for (let i = 0; i < batch_ses.length; i += 10) {
+        const chunk = batch_ses.slice(i, i + 10);
+        await Promise.all(chunk.map(function(item) {
+          return fbDb.collection(FB_COL).doc(fbUser.uid)
+            .collection('sesiones').doc(item.fecha).set(item.doc);
+        }));
+      }
+    }
+    logImport((dryRun ? '📋' : '✅') + ' Sesiones: ' + sesCreadas + (dryRun ? ' (simulado)' : ' creadas'));
+
+    // MIGRAR SETS desde ST.sets
+    logImport('');
+    logImport('── Sets ──────────────────────────');
+    const oldSets = oldST.sets || {};
+    const fechaSes = oldST.fechaSesiones || {};
+    // Invertir: n → fecha
+    const diaAFecha = {};
+    Object.keys(fechaSes).forEach(function(fecha) {
+      const n = fechaSes[fecha];
+      if (!diaAFecha[n]) diaAFecha[n] = fecha;
+    });
+
+    const newSetsMap = {}; // "fecha_ejslug" → {fecha, ej, sets:[]}
+    let setsNoFecha = 0;
+
+    Object.keys(oldSets).forEach(function(key) {
+      // Normalizar clave: quitar prefijo p20260612_ si existe
+      let clean = key.replace(/^p\d{8}_/, '');
+      const match = clean.match(/^d(\d+)_(.+)$/);
+      if (!match) return;
+      const diaNum = parseInt(match[1]);
+      const ejName = match[2];
+      const fecha = diaAFecha[diaNum];
+      if (!fecha) { setsNoFecha++; return; }
+      const docId = setDocId(fecha, ejName);
+      if (!newSetsMap[docId]) newSetsMap[docId] = {fecha: fecha, ejercicio: ejName, sets: [], checkManual: false};
+      const arr = (oldSets[key] || []).filter(Boolean);
+      arr.forEach(function(s) { newSetsMap[docId].sets.push(s); });
+    });
+
+    const nNewSets = Object.keys(newSetsMap).length;
+    if (!dryRun) {
+      const setsEntries = Object.entries(newSetsMap);
+      for (let i = 0; i < setsEntries.length; i += 10) {
+        const chunk = setsEntries.slice(i, i + 10);
+        await Promise.all(chunk.map(function(entry) {
+          const docId = entry[0];
+          const data = Object.assign({}, entry[1], {
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          ST.sets[docId] = {sets: data.sets, checkManual: data.checkManual};
+          return fbDb.collection(FB_COL).doc(fbUser.uid)
+            .collection('sets').doc(docId).set(data);
+        }));
+      }
+    } else {
+      // En simulación, solo llenar ST.sets en memoria
+      Object.entries(newSetsMap).forEach(function(entry) {
+        ST.sets[entry[0]] = {sets: entry[1].sets, checkManual: false};
+      });
+    }
+    logImport((dryRun ? '📋' : '✅') + ' Docs de sets: ' + nNewSets + (dryRun ? ' (simulado)' : ' creados'));
+    if (setsNoFecha > 0) logImport('⚠️  Sets sin fecha mapeada: ' + setsNoFecha + ' (posiblemente de otro programa)');
+
+    // MIGRAR PLANNING
+    logImport('');
+    logImport('── Planning ──────────────────────');
+    const planDia = oldST.planDia || {};
+    const notaDia = oldST.notaDia || {};
+    const fechasPlanning = new Set([...Object.keys(planDia), ...Object.keys(notaDia)]);
+    let planCreados = 0;
+    if (!dryRun && fechasPlanning.size > 0) {
+      await Promise.all(Array.from(fechasPlanning).map(function(fecha) {
+        const doc = {
+          fecha: fecha,
+          planDia: planDia[fecha] || null,
+          notaDia: notaDia[fecha] || '',
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+        planCreados++;
+        return fbDb.collection(FB_COL).doc(fbUser.uid)
+          .collection('planning').doc(fecha).set(doc);
+      }));
+    } else { planCreados = fechasPlanning.size; }
+    logImport((dryRun ? '📋' : '✅') + ' Planning: ' + planCreados + ' días' + (dryRun ? ' (simulado)' : ' creados'));
+
+    logImport('');
+    logImport('═══════════════════════════════════');
+    logImport(dryRun ? '🔍 SIMULACIÓN COMPLETADA — Sin cambios reales' : '🎉 IMPORTACIÓN COMPLETADA');
+    logImport('   Sesiones: ' + sesCreadas);
+    logImport('   Docs sets: ' + nNewSets);
+    logImport('   Planning: ' + planCreados + ' días');
+    logImport('═══════════════════════════════════');
+
+    if (!dryRun) {
+      save();
+      renders.hoy(); renders.entreno(); renders.config();
+      toast('✅ Importación completada');
+    }
+  } catch(e) {
+    logImport('❌ Error: ' + e.message);
+    console.error('Import error', e);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// PWA — SERVICE WORKER
+// ══════════════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js?v=2.0.1', {scope: './'})
+      .then(function(r) { console.log('SW registrado', r.scope); })
+      .catch(function(e) { console.warn('SW error', e); });
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+load();
+initFirebase();
+renders.hoy();
+renders.config();
+</script>
+</body>
+</html>
