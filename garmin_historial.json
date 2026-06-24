@@ -1432,13 +1432,18 @@
     },
     "2026-06-24": {
       "fecha": "2026-06-24",
-      "pasos": 78,
-      "calorias_dia": 111.0,
-      "calorias_activas": 1.0,
-      "distancia_km": 0.06,
+      "pasos": 214,
+      "calorias_dia": 795.0,
+      "calorias_activas": 3.0,
+      "distancia_km": 0.19,
       "minutos_activos": 0,
-      "fc_reposo": 48,
-      "estres_medio": 24
+      "fc_reposo": 43,
+      "estres_medio": 14,
+      "sueno_total_min": 487,
+      "sueno_profundo_min": 86,
+      "sueno_ligero_min": 324,
+      "sueno_rem_min": 78,
+      "sueno_puntuacion": 88
     }
   },
   "actualizado": "2026-06-24"
