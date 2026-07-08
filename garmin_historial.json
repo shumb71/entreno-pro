@@ -1738,7 +1738,17 @@
       "minutos_activos": 0,
       "fc_reposo": 49,
       "estres_medio": 26
+    },
+    "2026-07-08": {
+      "fecha": "2026-07-08",
+      "pasos": 342,
+      "calorias_dia": 329.0,
+      "calorias_activas": 9.0,
+      "distancia_km": 0.28,
+      "minutos_activos": 0,
+      "fc_reposo": 51,
+      "estres_medio": 26
     }
   },
-  "actualizado": "2026-07-07"
+  "actualizado": "2026-07-08"
 }
