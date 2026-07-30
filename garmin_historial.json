@@ -2173,7 +2173,17 @@
       "minutos_activos": 0,
       "fc_reposo": 50,
       "estres_medio": 32
+    },
+    "2026-07-30": {
+      "fecha": "2026-07-30",
+      "pasos": 16,
+      "calorias_dia": 255.0,
+      "calorias_activas": 0.0,
+      "distancia_km": 0.01,
+      "minutos_activos": 0,
+      "fc_reposo": 50,
+      "estres_medio": 21
     }
   },
-  "actualizado": "2026-07-29"
+  "actualizado": "2026-07-30"
 }
