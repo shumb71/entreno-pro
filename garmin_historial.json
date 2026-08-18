@@ -2449,7 +2449,17 @@
       "minutos_activos": 0,
       "fc_reposo": 51,
       "estres_medio": 88
+    },
+    "2026-08-18": {
+      "fecha": "2026-08-18",
+      "pasos": null,
+      "calorias_dia": null,
+      "calorias_activas": null,
+      "distancia_km": 0.0,
+      "minutos_activos": null,
+      "fc_reposo": null,
+      "estres_medio": null
     }
   },
-  "actualizado": "2026-08-17"
+  "actualizado": "2026-08-18"
 }
