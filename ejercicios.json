@@ -1,0 +1,769 @@
+{
+  "version": 1,
+  "generado": "2026-08-31",
+  "ejercicios": {
+    "Standing Chop": {
+      "tipo": "prog",
+      "tecnica": "Leñador (chop) de pie, diagonal de arriba a abajo. Igual que el Dynamic Chop: la rotación sale de la columna torácica y la cadera — la lumbar aguanta rígida, no rota."
+    },
+    "Standing Lift": {
+      "tipo": "prog",
+      "tecnica": "Levantamiento (lift) de pie, diagonal de abajo a arriba. Igual que el Dynamic Lift: rotación desde torácica + cadera, lumbar bloqueada como un bloque."
+    },
+    "DB Row": {
+      "tipo": "prog",
+      "tecnica": "Remo con mancuerna a una mano, apoyo en banco. Tracción horizontal.",
+      "variantes": [
+        "DB Row",
+        "TRX Row / Seated cable row",
+        "Pendlay Row pesado"
+      ],
+      "variantes_tipo": {
+        "DB Row": "base",
+        "TRX Row / Seated cable row": "regresion",
+        "Pendlay Row pesado": "progresion"
+      }
+    },
+    "Half-kneeling Overhead Press": {
+      "tipo": "prog",
+      "tecnica": "Press de hombro medio arrodillado con KB/mancuerna. Estabilidad de core y core antiextensión.",
+      "variantes": [
+        "Half-kneeling OHP (KB)",
+        "Seated DB Press",
+        "Standing Barbell OHP"
+      ],
+      "variantes_tipo": {
+        "Half-kneeling OHP (KB)": "base",
+        "Seated DB Press": "regresion",
+        "Standing Barbell OHP": "progresion"
+      }
+    },
+    "Push-up progression": {
+      "tipo": "prog",
+      "tecnica": "Flexión con progresión: inclinado → suelo → pies elevados → lastrado. Cuerpo en tabla.",
+      "variantes": [
+        "Push-up suelo",
+        "Push-up inclinado / rodillas",
+        "Push-up pies elevados",
+        "Push-up lastrado"
+      ],
+      "variantes_tipo": {
+        "Push-up suelo": "base",
+        "Push-up inclinado / rodillas": "regresion",
+        "Push-up pies elevados": "progresion",
+        "Push-up lastrado": "progresion"
+      }
+    },
+    "Bench Press + Med Ball": {
+      "tipo": "prog",
+      "tecnica": "Complejo: press + lanzamiento/press de balón en banco para potencia.",
+      "variantes": [
+        "Bench + Med Ball",
+        "Bench Press",
+        "Close-grip Bench"
+      ],
+      "variantes_tipo": {
+        "Bench + Med Ball": "base",
+        "Bench Press": "regresion",
+        "Close-grip Bench": "progresion"
+      }
+    },
+    "Squat Holds": {
+      "tipo": "prog",
+      "tecnica": "Sostén isométrico en sentadilla. Tolerable en general; baja el rango si molesta la rodilla.",
+      "variantes": [
+        "Squat Holds (isométrico)",
+        "Wall Sit"
+      ],
+      "variantes_tipo": {
+        "Squat Holds (isométrico)": "base",
+        "Wall Sit": "alt_rodilla"
+      }
+    },
+    "Hang Clean (65-75%)": {
+      "tipo": "prog",
+      "tecnica": "Hang clean al 65-75%. SIEMPRE primero. Extensión completa de cadera, calidad sobre cantidad.",
+      "variantes": [
+        "Hang Clean 65-75%",
+        "KB Swing",
+        "Hang Clean desde pos. 2"
+      ],
+      "variantes_tipo": {
+        "Hang Clean 65-75%": "base",
+        "KB Swing": "regresion",
+        "Hang Clean desde pos. 2": "progresion"
+      }
+    },
+    "Hang Clean": {
+      "tipo": "prog",
+      "tecnica": "SIEMPRE primero en la sesion. Desde encima de rodillas. Extension completa de cadera. 3-5 reps max — calidad sobre cantidad.",
+      "variantes": [
+        "Hang Clean desde pos. 1",
+        "High Pull",
+        "KB Swing / DB Snatch",
+        "Hang Clean desde pos. 2",
+        "Power Clean (desde suelo)"
+      ],
+      "variantes_tipo": {
+        "Hang Clean desde pos. 1": "base",
+        "High Pull": "regresion",
+        "KB Swing / DB Snatch": "regresion",
+        "Hang Clean desde pos. 2": "progresion",
+        "Power Clean (desde suelo)": "progresion"
+      }
+    },
+    "DB Snatch / KB Swing": {
+      "tipo": "prog",
+      "tecnica": "KB Swing: cadera atras y adelante explosivo. No es una sentadilla. Alternativa al Hang Clean si hay fatiga o tecnica no consolidada."
+    },
+    "Trap Bar Deadlift": {
+      "tipo": "prog",
+      "tecnica": "Agarre neutro en hex bar. Cadera baja al inicio. Empujar el suelo. Espalda neutra durante todo el recorrido. PARA si la lumbar se redondea.",
+      "alerta": "⚠️ Condropatía femoral medial: vigilar que las rodillas NO colapsen en valgo durante el tirón. Generalmente bien tolerado.",
+      "variantes": [
+        "Trap Bar Deadlift",
+        "Single-leg RDL",
+        "Hip Thrust / Puente glúteo",
+        "Trap Bar + Hurdle Jump"
+      ],
+      "variantes_tipo": {
+        "Trap Bar Deadlift": "base",
+        "Single-leg RDL": "regresion",
+        "Hip Thrust / Puente glúteo": "regresion",
+        "Trap Bar + Hurdle Jump": "progresion"
+      }
+    },
+    "Split Squat (Bottoms-up KB)": {
+      "tipo": "prog",
+      "tecnica": "KB invertido activa el manguito rotador. Rodilla trasera a 1 cm del suelo. Tronco erguido. Unilateral ANTES que bilateral en el dia.",
+      "alerta": "⚠️ Condropatía femoral medial: reducir rango, no bajar más allá de donde la rodilla pierda alineación. Si hay dolor sustituir por Step-up cajón bajo.",
+      "reps": "c/lado",
+      "variantes": [
+        "Split Squat a cajón (parcial)",
+        "Wall Sit (isométrico)",
+        "Terminal Knee Extension (banda)",
+        "Split Squat KB bottoms-up",
+        "RFESS",
+        "One-leg Squat"
+      ],
+      "variantes_tipo": {
+        "Split Squat a cajón (parcial)": "alt_rodilla",
+        "Wall Sit (isométrico)": "alt_rodilla",
+        "Terminal Knee Extension (banda)": "alt_rodilla",
+        "Split Squat KB bottoms-up": "base",
+        "RFESS": "progresion",
+        "One-leg Squat": "progresion"
+      }
+    },
+    "Split Squat / RFESS": {
+      "tipo": "prog",
+      "tecnica": "Pie trasero elevado (RFESS). Bajada 3 seg. No dejar que la rodilla delantera supere el pie. Core muy activo.",
+      "alerta": "⚠️ Condropatía femoral medial: vigilar rodilla en valgo. Rango reducido. Si dolor → Step-up o Split Squat sin elevación del pie trasero.",
+      "reps": "c/lado"
+    },
+    "Single-leg Squat": {
+      "tipo": "prog",
+      "tecnica": "Progresion avanzada. Solo cuando el RFESS esta consolidado. Cadera atras y abajo. Rodilla estable.",
+      "reps": "c/lado"
+    },
+    "Single-leg RDL (Straight-leg DL)": {
+      "tipo": "prog",
+      "tecnica": "Cadera atras, pierna de apoyo ligeramente doblada. Espalda recta. Lleva el pie libre hacia atras — no hacia abajo.",
+      "reps": "c/lado",
+      "variantes": [
+        "Single-leg RDL",
+        "SLDL con apoyo (toe touch)",
+        "SLDL con KB/mancuerna pesada"
+      ],
+      "variantes_tipo": {
+        "Single-leg RDL": "base",
+        "SLDL con apoyo (toe touch)": "regresion",
+        "SLDL con KB/mancuerna pesada": "progresion"
+      }
+    },
+    "Slide Board Lunge / Ham ISO": {
+      "tipo": "prog",
+      "tecnica": "Slide lunge: pie sobre disco o valslide. Control excentrico de 3-4 seg. Ham ISO: flexion isometrica en TRX o maquina.",
+      "reps": "c/lado"
+    },
+    "Chin-up / Pull-up": {
+      "tipo": "prog",
+      "tecnica": "Baseline: chin-up agarre supino. Cuando llegues a 10 reps limpias, anade lastre (+10kg). Progresion: neutro → pull-up → sternum chin-up.",
+      "variantes": [
+        "Chin-up / Pull-up",
+        "Chin-up asistido (banda)",
+        "Ring Row / Lat pulldown",
+        "Chin-up lastrado"
+      ],
+      "variantes_tipo": {
+        "Chin-up / Pull-up": "base",
+        "Chin-up asistido (banda)": "regresion",
+        "Ring Row / Lat pulldown": "regresion",
+        "Chin-up lastrado": "progresion"
+      }
+    },
+    "DB Row / TRX Row": {
+      "tipo": "prog",
+      "tecnica": "No torcer el tronco. Codo cerca del cuerpo. En TRX el cuerpo mas horizontal = mas dificil. 3 sets minimo en todos los dias.",
+      "reps": "c/lado"
+    },
+    "Press banca (Bench Press)": {
+      "tipo": "prog",
+      "tecnica": "Mancuernas para mayor rango. Pies en el suelo. Bajada 3 seg (tempo). No arquear la lumbar. Alternativa: flexiones lastradas."
+    },
+    "Incline Bench / Close Grip Bench": {
+      "tipo": "prog",
+      "tecnica": "Incline: 30-45 grados. Close grip: manos a anchura de hombros. Ambos reducen estres en el hombro vs press plano con agarre ancho."
+    },
+    "Push-up variante (TRX/lastrada)": {
+      "tipo": "prog",
+      "tecnica": "Progresion al press plano. Cuerpo recto como una tabla. TRX inestabilidad activa el core. Con lastre en la espalda para progresar."
+    },
+    "Press hombro KB (half-kneeling)": {
+      "tipo": "prog",
+      "tecnica": "Half-kneeling: rodilla en el suelo, activa el gluteo trasero. KB: pulgar toca el deltoide frontal. Alterna brazos. No arquear la lumbar."
+    },
+    "Plancha antirotacion (Chop)": {
+      "tipo": "fijo",
+      "tecnica": "Cable o goma desde alto. Medio arrodillado. Tira hacia abajo y cruzado. El tronco NO rota. Core rigido.",
+      "series": "3",
+      "reps": "8 por lado"
+    },
+    "Chop/Lift (standing)": {
+      "tipo": "fijo",
+      "tecnica": "De pie. Chop: desde arriba hacia abajo diagonal. Lift: desde abajo hacia arriba diagonal. Sin rotacion de tronco.",
+      "series": "3",
+      "reps": "8 por lado"
+    },
+    "Side Plank / Suitcase Carry": {
+      "tipo": "fijo",
+      "tecnica": "Side Plank: cadera elevada, cuerpo recto. Suitcase carry: KB en una mano, camina recto. No inclinarse hacia el lado cargado.",
+      "series": "3",
+      "reps": "30seg o 20m"
+    },
+    "Farmer Walk / Side Plank Row": {
+      "tipo": "fijo",
+      "tecnica": "Farmer walk: dos KB o mancuernas, camina erguido. Side plank row: en plancha lateral, rema con el brazo libre.",
+      "series": "3",
+      "reps": "20m o 8/lado"
+    },
+    "Ab Wheel / Body Saw": {
+      "tipo": "fijo",
+      "tecnica": "Ab Wheel: empieza de rodillas, avanza hasta donde puedas sin perder la lumbar. Body saw: en forearm plank, desliza adelante y atras.",
+      "series": "3",
+      "reps": "8-10"
+    },
+    "AB Wheel / Valslide Rollout": {
+      "tipo": "fijo",
+      "tecnica": "Valslide en suelo duro. Igual que ab wheel. La lumbar NO se hunde. Si no puedes controlar, regresa al body saw.",
+      "series": "3",
+      "reps": "8-10"
+    },
+    "Bench Press": {
+      "tipo": "prog",
+      "tecnica": "Press banca barra o mancuernas. Bajada 3 seg (tempo). Pies en el suelo. Alternativa: mancuernas para mayor rango.",
+      "variantes": [
+        "Bench Press",
+        "DB Bench / Floor Press",
+        "Push-up",
+        "Bench + Med Ball / Close-grip"
+      ],
+      "variantes_tipo": {
+        "Bench Press": "base",
+        "DB Bench / Floor Press": "regresion",
+        "Push-up": "regresion",
+        "Bench + Med Ball / Close-grip": "progresion"
+      }
+    },
+    "Standing Overhead Press": {
+      "tipo": "prog",
+      "tecnica": "De pie, core activo. Mancuernas o barra. No arquear la lumbar. Alternativa sentado si hay movilidad limitada. Alternativas válidas: Half-kneeling Overhead Press (más estabilidad de core, apoyo de rodilla) o High Split Press (zancada alta, sin flexión profunda de rodilla).",
+      "variantes": [
+        "Standing Barbell OHP",
+        "Half-kneeling OHP (KB)",
+        "Push Press",
+        "Half-kneeling Overhead Press",
+        "High Split Press"
+      ],
+      "variantes_tipo": {
+        "Standing Barbell OHP": "base",
+        "Half-kneeling OHP (KB)": "regresion",
+        "Push Press": "progresion",
+        "Half-kneeling Overhead Press": "alt",
+        "High Split Press": "alt"
+      }
+    },
+    "High Split Press": {
+      "tipo": "prog",
+      "tecnica": "Press de hombro (barra o mancuernas) en zancada dividida alta: pie trasero apoyado solo de puntera, rodilla casi extendida — sin bajar como en una zancada profunda. Añade estabilidad de cadera y core al press sin la carga articular de una zancada baja, buena opción por la rodilla."
+    },
+    "One-leg Squat": {
+      "tipo": "prog",
+      "tecnica": "Progresión del Split Squat. Solo cuando RFESS está consolidado. Cadera atrás y abajo, rodilla estable. Asistencia en progresión.",
+      "alerta": "⚠️ Rotura menisco externo / condropatía: evitar flexión profunda con carga. Sustituir por Step-up cajón bajo o Wall Sit.",
+      "reps": "c/lado",
+      "variantes": [
+        "Step-up bajo controlado",
+        "Wall Sit",
+        "Split Squat a cajón",
+        "RFESS",
+        "One-leg Squat",
+        "Pistol squat asistido"
+      ],
+      "variantes_tipo": {
+        "Step-up bajo controlado": "alt_rodilla",
+        "Wall Sit": "alt_rodilla",
+        "Split Squat a cajón": "regresion",
+        "RFESS": "regresion",
+        "One-leg Squat": "base",
+        "Pistol squat asistido": "progresion"
+      }
+    },
+    "Rear-foot-elevated Split Squat": {
+      "tipo": "prog",
+      "tecnica": "Pie trasero elevado. Bajada 3 seg. No dejar que la rodilla delantera supere el pie en exceso. Core muy activo.",
+      "alerta": "⚠️ Condropatía femoral medial: vigilar rodilla en valgo. Si dolor → Split Squat sin elevación.",
+      "reps": "c/lado",
+      "variantes": [
+        "Split Squat a cajón (parcial)",
+        "Wall Sit (isométrico)",
+        "Terminal Knee Extension (banda)",
+        "Step-up bajo controlado",
+        "Split Squat (sin elevar pie)",
+        "RFESS",
+        "One-leg Squat"
+      ],
+      "variantes_tipo": {
+        "Split Squat a cajón (parcial)": "alt_rodilla",
+        "Wall Sit (isométrico)": "alt_rodilla",
+        "Terminal Knee Extension (banda)": "alt_rodilla",
+        "Step-up bajo controlado": "alt_rodilla",
+        "Split Squat (sin elevar pie)": "regresion",
+        "RFESS": "base",
+        "One-leg Squat": "progresion"
+      }
+    },
+    "Ring Row": {
+      "tipo": "prog",
+      "tecnica": "TRX o anillas. Cuerpo recto como tabla. Cuanto más horizontal el cuerpo, más difícil. 3 series mínimo. Progresión: piés elevados.",
+      "variantes": [
+        "Ring Row",
+        "TRX Row más vertical",
+        "Ring Row pies elevados"
+      ],
+      "variantes_tipo": {
+        "Ring Row": "base",
+        "TRX Row más vertical": "regresion",
+        "Ring Row pies elevados": "progresion"
+      }
+    },
+    "Front Plank": {
+      "tipo": "fijo",
+      "tecnica": "Core rígido. No dejar caer las caderas. Respirar. Progresión: aumentar tiempo semanal.",
+      "series": "3",
+      "reps": "20-30s",
+      "variantes": [
+        "Front Plank",
+        "Front Plank rodillas",
+        "Hard-style Front Plank",
+        "Stability Ball Roll-out",
+        "Ab Wheel"
+      ],
+      "variantes_tipo": {
+        "Front Plank": "base",
+        "Front Plank rodillas": "regresion",
+        "Hard-style Front Plank": "progresion",
+        "Stability Ball Roll-out": "progresion",
+        "Ab Wheel": "progresion"
+      }
+    },
+    "Hard-style Front Plank": {
+      "tipo": "fijo",
+      "tecnica": "Máxima tensión muscular: apretar todo. Glúteos, core, cuádriceps. Tiempo corto pero máxima intensidad.",
+      "series": "3",
+      "reps": "20-25s",
+      "variantes": [
+        "Hard-style Front Plank",
+        "Front Plank",
+        "Stability Ball Roll-out"
+      ],
+      "variantes_tipo": {
+        "Hard-style Front Plank": "base",
+        "Front Plank": "regresion",
+        "Stability Ball Roll-out": "progresion"
+      }
+    },
+    "Stability Ball Roll-out": {
+      "tipo": "fijo",
+      "tecnica": "Rodillas en suelo, manos en pelota. Avanza hasta donde puedas sin perder la lumbar. Equivalente al ab wheel.",
+      "series": "3",
+      "reps": "6-8",
+      "variantes": [
+        "Stability Ball Roll-out",
+        "Front Plank / Body Saw",
+        "Ab Wheel de pie"
+      ],
+      "variantes_tipo": {
+        "Stability Ball Roll-out": "base",
+        "Front Plank / Body Saw": "regresion",
+        "Ab Wheel de pie": "progresion"
+      }
+    },
+    "In-line Chop": {
+      "tipo": "fijo",
+      "tecnica": "Half-kneeling, cable o goma. Movimiento diagonal desde arriba. Tronco NO rota. Core rígido.",
+      "series": "3",
+      "reps": "8/lado",
+      "variantes": [
+        "In-line Chop",
+        "Half-kneeling Chop",
+        "In-line Iso Hold Chop",
+        "Dynamic Chop"
+      ],
+      "variantes_tipo": {
+        "In-line Chop": "base",
+        "Half-kneeling Chop": "regresion",
+        "In-line Iso Hold Chop": "progresion",
+        "Dynamic Chop": "progresion"
+      }
+    },
+    "In-line Lift": {
+      "tipo": "fijo",
+      "tecnica": "Half-kneeling, cable o goma. Movimiento diagonal desde abajo. Tronco NO rota.",
+      "series": "3",
+      "reps": "8/lado",
+      "variantes": [
+        "In-line Lift",
+        "Half-kneeling Lift",
+        "In-line Iso Hold Lift",
+        "Dynamic Lift"
+      ],
+      "variantes_tipo": {
+        "In-line Lift": "base",
+        "Half-kneeling Lift": "regresion",
+        "In-line Iso Hold Lift": "progresion",
+        "Dynamic Lift": "progresion"
+      }
+    },
+    "In-line Iso Hold Chop": {
+      "tipo": "fijo",
+      "tecnica": "Igual que el Chop pero con pausa isométrica en el punto de máxima tensión. Mayor activación del core.",
+      "series": "3",
+      "reps": "8/lado",
+      "variantes": [
+        "In-line Iso Hold Chop",
+        "In-line Chop",
+        "Dynamic Chop"
+      ],
+      "variantes_tipo": {
+        "In-line Iso Hold Chop": "base",
+        "In-line Chop": "regresion",
+        "Dynamic Chop": "progresion"
+      }
+    },
+    "In-line Iso Hold Lift": {
+      "tipo": "fijo",
+      "tecnica": "Igual que el Lift pero con pausa isométrica. Mayor activación.",
+      "series": "3",
+      "reps": "8/lado",
+      "variantes": [
+        "In-line Iso Hold Lift",
+        "In-line Lift",
+        "Dynamic Lift"
+      ],
+      "variantes_tipo": {
+        "In-line Iso Hold Lift": "base",
+        "In-line Lift": "regresion",
+        "Dynamic Lift": "progresion"
+      }
+    },
+    "Dynamic Chop": {
+      "tipo": "fijo",
+      "tecnica": "De pie, movimiento dinámico diagonal. Máxima velocidad con control. Fase avanzada del in-line chop.",
+      "series": "3",
+      "reps": "10/lado",
+      "variantes": [
+        "Dynamic Chop",
+        "In-line Iso Hold Chop",
+        "In-line Chop"
+      ],
+      "variantes_tipo": {
+        "Dynamic Chop": "base",
+        "In-line Iso Hold Chop": "regresion",
+        "In-line Chop": "regresion"
+      }
+    },
+    "Dynamic Lift": {
+      "tipo": "fijo",
+      "tecnica": "De pie, movimiento dinámico de abajo hacia arriba. Fase avanzada.",
+      "series": "3",
+      "reps": "10/lado",
+      "variantes": [
+        "Dynamic Lift",
+        "In-line Iso Hold Lift",
+        "In-line Lift"
+      ],
+      "variantes_tipo": {
+        "Dynamic Lift": "base",
+        "In-line Iso Hold Lift": "regresion",
+        "In-line Lift": "regresion"
+      }
+    },
+    "Half-kneeling Windmill": {
+      "tipo": "prog",
+      "tecnica": "Semi-arrodillado, peso en la mano del lado de la pierna adelantada, brazo bloqueado hacia el techo. Bisagra de cadera lateral sin perder de vista el peso. Muy lento y controlado.",
+      "reps": "c/lado",
+      "variantes": [
+        "Windmill sin peso",
+        "Windmill con KB ligera",
+        "Half-kneeling Windmill"
+      ],
+      "variantes_tipo": {
+        "Windmill sin peso": "regresion",
+        "Windmill con KB ligera": "base",
+        "Half-kneeling Windmill": "progresion"
+      }
+    },
+    "Supine Floor Slide": {
+      "tipo": "fijo",
+      "tecnica": "Tumbado boca arriba, brazos en W. Desliza hacia arriba manteniendo el contacto con el suelo. Movilidad escapular.",
+      "series": "3",
+      "reps": "10",
+      "variantes": [
+        "Supine Floor Slide",
+        "Wall Slide de pie"
+      ],
+      "variantes_tipo": {
+        "Supine Floor Slide": "base",
+        "Wall Slide de pie": "regresion"
+      }
+    },
+    "Spiderman pos. lat stretch": {
+      "tipo": "fijo",
+      "tecnica": "Posición de estiramiento lateral tipo araña. 2×5 respiraciones profundas por lado. Movilidad de cadera y columna.",
+      "series": "2",
+      "reps": "5 respiraciones",
+      "variantes": [
+        "Spiderman lat stretch",
+        "Open book",
+        "World's greatest stretch"
+      ],
+      "variantes_tipo": {
+        "Spiderman lat stretch": "base",
+        "Open book": "alt",
+        "World's greatest stretch": "progresion"
+      }
+    },
+    "Suitcase Carry": {
+      "tipo": "fijo",
+      "tecnica": "KB en una mano, camina recto sin inclinarte. Core antilateral. No tocar con el peso el costado.",
+      "series": "3",
+      "reps": "25y/lado",
+      "variantes": [
+        "Suitcase Carry unilateral",
+        "Farmer Walk bilateral",
+        "Bottoms-up KB walk"
+      ],
+      "variantes_tipo": {
+        "Suitcase Carry unilateral": "base",
+        "Farmer Walk bilateral": "regresion",
+        "Bottoms-up KB walk": "progresion"
+      }
+    },
+    "Farmer Carry": {
+      "tipo": "fijo",
+      "tecnica": "Dos KB o mancuernas pesadas. Camina erguido, core activo. Semana 3: 3 pasadas.",
+      "series": "2",
+      "reps": "25y×2",
+      "variantes": [
+        "Farmer Carry bilateral",
+        "Suitcase Carry unilateral"
+      ],
+      "variantes_tipo": {
+        "Farmer Carry bilateral": "base",
+        "Suitcase Carry unilateral": "regresion"
+      }
+    },
+    "X-pull-down": {
+      "tipo": "prog",
+      "tecnica": "Cable en posición cruzada. Tira hacia abajo y al lado contrario. Activa el dorsal y el core rotatorio. 10 reps por lado.",
+      "variantes": [
+        "X-pull-down con cable/goma",
+        "Lat pulldown",
+        "Straight-arm pulldown"
+      ],
+      "variantes_tipo": {
+        "X-pull-down con cable/goma": "base",
+        "Lat pulldown": "alt",
+        "Straight-arm pulldown": "alt"
+      }
+    },
+    "Half-kneeling push-pull": {
+      "tipo": "prog",
+      "tecnica": "Half-kneeling con cable. Un brazo empuja mientras el otro tira. Antirotación máxima del core.",
+      "variantes": [
+        "Half-kneeling push-pull con cable",
+        "Seated cable row + press",
+        "Standing push-pull",
+        "Dynamic push-pull"
+      ],
+      "variantes_tipo": {
+        "Half-kneeling push-pull con cable": "base",
+        "Seated cable row + press": "regresion",
+        "Standing push-pull": "progresion",
+        "Dynamic push-pull": "progresion"
+      }
+    },
+    "Dynamic push-pull": {
+      "tipo": "prog",
+      "tecnica": "De pie, movimiento dinámico de empuje-tracción. Fase avanzada del push-pull.",
+      "variantes": [
+        "Dynamic push-pull de pie",
+        "Half-kneeling push-pull"
+      ],
+      "variantes_tipo": {
+        "Dynamic push-pull de pie": "base",
+        "Half-kneeling push-pull": "regresion"
+      }
+    },
+    "Toe Touch Squat with medicine ball": {
+      "tipo": "fijo",
+      "tecnica": "Toca punta del pie, balón medicinal por encima. Movilidad completa. Lento y controlado.",
+      "series": "3",
+      "reps": "6",
+      "variantes": [
+        "Toe Touch Squat (med ball)",
+        "Sentadilla a cajón",
+        "Goblet Squat (rango parcial)"
+      ],
+      "variantes_tipo": {
+        "Toe Touch Squat (med ball)": "base",
+        "Sentadilla a cajón": "regresion",
+        "Goblet Squat (rango parcial)": "progresion"
+      }
+    },
+    "Half-kneeling antirotation hold": {
+      "tipo": "fijo",
+      "tecnica": "Half-kneeling, cable o goma lateral. Resistir la rotación. Core rígido. Sem 1: 20s → Sem 3: 25s.",
+      "series": "3",
+      "reps": "20-25s",
+      "variantes": [
+        "Half-kneeling antirotation hold",
+        "Pallof press isométrico",
+        "Standing antirotation hold (tempo)"
+      ],
+      "variantes_tipo": {
+        "Half-kneeling antirotation hold": "base",
+        "Pallof press isométrico": "regresion",
+        "Standing antirotation hold (tempo)": "progresion"
+      }
+    },
+    "Standing antirotation hold": {
+      "tipo": "fijo",
+      "tecnica": "De pie, cable lateral. Misma lógica que el half-kneeling pero de pie. Mayor exigencia estabilizadora.",
+      "series": "3",
+      "reps": "25s",
+      "variantes": [
+        "Standing antirotation hold",
+        "Half-kneeling antirotation hold",
+        "Pallof press caminando"
+      ],
+      "variantes_tipo": {
+        "Standing antirotation hold": "base",
+        "Half-kneeling antirotation hold": "regresion",
+        "Pallof press caminando": "progresion"
+      }
+    },
+    "Trap Bar Deadlift + Hurdle Jump": {
+      "tipo": "prog",
+      "tecnica": "Complejo F3/F4: Trap Bar DL seguido inmediatamente de salto sobre valla. Potencia máxima.",
+      "alerta": "⚠️ Rotura menisco externo: salto/impacto contraindicado. Sustituir por empuje de Trineo (sin salto) o el ejercicio sin el complejo de salto.",
+      "variantes": [
+        "Trap Bar + empuje de Trineo (sin salto)",
+        "Trap Bar Deadlift solo",
+        "Trap Bar + Hurdle Jump"
+      ],
+      "variantes_tipo": {
+        "Trap Bar + empuje de Trineo (sin salto)": "alt_rodilla",
+        "Trap Bar Deadlift solo": "alt_rodilla",
+        "Trap Bar + Hurdle Jump": "base"
+      }
+    },
+    "Chin-up + Med Ball Slam": {
+      "tipo": "prog",
+      "tecnica": "Complejo F3/F4: Chin-up seguido de slam de balón medicinal 3×10. Potencia del tren superior.",
+      "variantes": [
+        "Chin-up + slam ligero",
+        "Chin-up + Med Ball Slam"
+      ],
+      "variantes_tipo": {
+        "Chin-up + slam ligero": "regresion",
+        "Chin-up + Med Ball Slam": "base"
+      }
+    },
+    "RFESS + Hurdle Hops": {
+      "tipo": "prog",
+      "tecnica": "Complejo F3/F4: RFESS seguido de saltos continuos sobre vallas. Potencia unilateral.",
+      "alerta": "⚠️ Rotura menisco externo: salto/impacto contraindicado. Sustituir por empuje de Trineo (sin salto) o el ejercicio sin el complejo de salto.",
+      "reps": "c/lado",
+      "variantes": [
+        "RFESS + empuje de Trineo (sin salto)",
+        "RFESS solo",
+        "RFESS + Hurdle Hops"
+      ],
+      "variantes_tipo": {
+        "RFESS + empuje de Trineo (sin salto)": "alt_rodilla",
+        "RFESS solo": "alt_rodilla",
+        "RFESS + Hurdle Hops": "base"
+      }
+    },
+    "Ring Row + Med Ball Slam": {
+      "tipo": "prog",
+      "tecnica": "Complejo F3/F4: Ring Row seguido de slam de balón medicinal.",
+      "variantes": [
+        "Ring Row + slam ligero",
+        "Ring Row + Med Ball Slam"
+      ],
+      "variantes_tipo": {
+        "Ring Row + slam ligero": "regresion",
+        "Ring Row + Med Ball Slam": "base"
+      }
+    },
+    "Bench Press + Med Ball Bench": {
+      "tipo": "prog",
+      "tecnica": "Complejo F3/F4: Press banca seguido de lanzamiento de balón medicinal desde el pecho."
+    },
+    "Dumbbell Incline Bench": {
+      "tipo": "prog",
+      "tecnica": "Press inclinado con mancuernas. 30-45 grados. Mayor rango que barra. Reduce el estrés en el hombro.",
+      "variantes": [
+        "DB Incline Bench",
+        "Incline Push-up",
+        "Incline + Med Ball"
+      ],
+      "variantes_tipo": {
+        "DB Incline Bench": "base",
+        "Incline Push-up": "regresion",
+        "Incline + Med Ball": "progresion"
+      }
+    },
+    "Dumbbell Incline Bench + Med Ball": {
+      "tipo": "prog",
+      "tecnica": "Complejo: press inclinado + lanzamiento de balón medicinal. F3/F4.",
+      "variantes": [
+        "DB Incline + Med Ball",
+        "DB Incline Bench"
+      ],
+      "variantes_tipo": {
+        "DB Incline + Med Ball": "base",
+        "DB Incline Bench": "regresion"
+      }
+    },
+    "Trineo (empujes)": {
+      "tipo": "fijo",
+      "tecnica": "Empuje pesado: postura baja, empuja con todo el cuerpo. Alternativa al ejercicio explosivo o como finalizador. Recuperacion rapida — sin agujetas.",
+      "series": "3",
+      "reps": "3-4 series 20-30m"
+    }
+  }
+}

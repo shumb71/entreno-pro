@@ -1,0 +1,2278 @@
+{
+  "version": 1,
+  "generado": "2026-08-27",
+  "fases": {
+    "F1": {
+      "dias": {
+        "D1": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Hang Clean",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Front Plank",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×20s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×30s"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Trap Bar Deadlift",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Chin-up / Pull-up",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Split Squat (Bottoms-up KB)",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "8/lado"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "8/lado"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "8/lado"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "DB Row",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "In-line Chop",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×8"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×8"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×8"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D2": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Bench Press",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Spiderman pos. lat stretch",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×5r"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Half-kneeling Overhead Press",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Supine Floor Slide",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Push-up progression",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Half-kneeling push-pull",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Suitcase Carry",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "25y/lado"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "25y/lado"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "25y/lado"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D3": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Hang Clean",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Front Plank",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×20s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×30s"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Rear-foot-elevated Split Squat",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "8/lado"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "8/lado"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "8/lado"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Ring Row",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Single-leg RDL (Straight-leg DL)",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "8/lado"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "8/lado"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "8/lado"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "X-pull-down",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "In-line Lift",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×8"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×8"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×8"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D4": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Dumbbell Incline Bench",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Spiderman pos. lat stretch",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×5r"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Push-up progression",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Squat Holds",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 6
+                    },
+                    {
+                      "semana": 2,
+                      "r": 6
+                    },
+                    {
+                      "semana": 3,
+                      "r": 6
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Half-kneeling Windmill",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3/lado"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "4/lado"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "4/lado"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Half-kneeling antirotation hold",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×20s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×25s"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Farmer Carry",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "25y×2"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "25y×2"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "25y×2"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "F2": {
+      "dias": {
+        "D1": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Hang Clean",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 3
+                    },
+                    {
+                      "semana": 2,
+                      "r": 3
+                    },
+                    {
+                      "semana": 3,
+                      "r": 3
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Hard-style Front Plank",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×20s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×25s"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Trap Bar Deadlift",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "5,5,5+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,5,5,5+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,5,5,5+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Chin-up / Pull-up",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "One-leg Squat",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 6
+                    },
+                    {
+                      "semana": 2,
+                      "r": 6
+                    },
+                    {
+                      "semana": 3,
+                      "r": 6
+                    }
+                  ]
+                },
+                {
+                  "nombre": "DB Row",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 10
+                    },
+                    {
+                      "semana": 2,
+                      "r": 10
+                    },
+                    {
+                      "semana": 3,
+                      "r": 10
+                    }
+                  ]
+                },
+                {
+                  "nombre": "In-line Iso Hold Chop",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×8"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×8"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×8"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D2": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Bench Press",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "5,5,5+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,5,5,5+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,5,5,5+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Spiderman pos. lat stretch",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×5r"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Standing Overhead Press",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Supine Floor Slide",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 10
+                    },
+                    {
+                      "semana": 2,
+                      "r": 10
+                    },
+                    {
+                      "semana": 3,
+                      "r": 10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Push-up progression",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "10,10,10+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Half-kneeling push-pull",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Suitcase Carry",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "25y/lado"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "25y/lado"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "25y/lado"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D3": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Hang Clean (65-75%)",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Hard-style Front Plank",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×20s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×25s"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Rear-foot-elevated Split Squat",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "5,5,5+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,5,5,5+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,5,5,5+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Ring Row",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 10
+                    },
+                    {
+                      "semana": 2,
+                      "r": 10
+                    },
+                    {
+                      "semana": 3,
+                      "r": 10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Single-leg RDL (Straight-leg DL)",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "X-pull-down",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 10
+                    },
+                    {
+                      "semana": 2,
+                      "r": 10
+                    },
+                    {
+                      "semana": 3,
+                      "r": 10
+                    }
+                  ]
+                },
+                {
+                  "nombre": "In-line Iso Hold Lift",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×8"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×8"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×8"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D4": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Dumbbell Incline Bench",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×5"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,5,5,5+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,5,5,5+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Spiderman pos. lat stretch",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×5r"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Push-up progression",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "10,10,10+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Toe Touch Squat with medicine ball",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 6
+                    },
+                    {
+                      "semana": 2,
+                      "r": 6
+                    },
+                    {
+                      "semana": 3,
+                      "r": 6
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Half-kneeling Windmill",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3/lado"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "4/lado"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "4/lado"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Half-kneeling antirotation hold",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×20s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×25s"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Farmer Carry",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "25y×2"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "25y×2"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "25y×2"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "F3": {
+      "dias": {
+        "D1": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Hang Clean",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 3
+                    },
+                    {
+                      "semana": 2,
+                      "r": 3
+                    },
+                    {
+                      "semana": 3,
+                      "r": 3
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Stability Ball Roll-out",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×6"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×8"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Trap Bar Deadlift + Hurdle Jump",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×5"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×5"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,5,5+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Chin-up + Med Ball Slam",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3,3,3+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3,3,3+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3,3,3+"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "One-leg Squat",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "DB Row",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Dynamic Chop",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×10"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×10"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×10"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D2": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Bench Press + Med Ball",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,3,1+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Spiderman pos. lat stretch",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×5r"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Standing Overhead Press",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Supine Floor Slide",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 10
+                    },
+                    {
+                      "semana": 2,
+                      "r": 10
+                    },
+                    {
+                      "semana": 3,
+                      "r": 10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Push-up progression",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "10,10,10+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Dynamic push-pull",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Suitcase Carry",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "25y/lado"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "25y/lado"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "25y/lado"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D3": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Hang Clean (65-75%)",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Stability Ball Roll-out",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×20s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×25s"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "RFESS + Hurdle Hops",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,3,3+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Ring Row + Med Ball Slam",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 10
+                    },
+                    {
+                      "semana": 2,
+                      "r": 10
+                    },
+                    {
+                      "semana": 3,
+                      "r": 10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Single-leg RDL (Straight-leg DL)",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 6
+                    },
+                    {
+                      "semana": 2,
+                      "r": 6
+                    },
+                    {
+                      "semana": 3,
+                      "r": 6
+                    }
+                  ]
+                },
+                {
+                  "nombre": "DB Row",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Dynamic Lift",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×10"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×10"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×10"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D4": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Dumbbell Incline Bench + Med Ball",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,3,3+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Spiderman pos. lat stretch",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×5r"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Push-up progression",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "10,10,10+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Toe Touch Squat with medicine ball",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Half-kneeling Windmill",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2+2"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2+2"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2+2"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Standing antirotation hold",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×25s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×25s"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Farmer Carry",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "25y×3"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "25y×3"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "25y×3"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "F4": {
+      "dias": {
+        "D1": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Hang Clean",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 3
+                    },
+                    {
+                      "semana": 2,
+                      "r": 3
+                    },
+                    {
+                      "semana": 3,
+                      "r": 3
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Stability Ball Roll-out",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×6"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×8"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Trap Bar Deadlift + Hurdle Jump",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×5"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×5"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,5,5+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Chin-up + Med Ball Slam",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3,3,3+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3,3,3+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3,3,3+"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "One-leg Squat",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "DB Row",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Dynamic Chop",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×10"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×10"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×10"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D2": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Bench Press + Med Ball",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,3,1+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Spiderman pos. lat stretch",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×5r"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Standing Overhead Press",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Supine Floor Slide",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 10
+                    },
+                    {
+                      "semana": 2,
+                      "r": 10
+                    },
+                    {
+                      "semana": 3,
+                      "r": 10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Push-up progression",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "10,10,10+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Dynamic push-pull",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Suitcase Carry",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "25y/lado"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "25y/lado"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "25y/lado"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D3": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Hang Clean (65-75%)",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Stability Ball Roll-out",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×20s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×25s"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "RFESS + Hurdle Hops",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,3,3+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Ring Row + Med Ball Slam",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 10
+                    },
+                    {
+                      "semana": 2,
+                      "r": 10
+                    },
+                    {
+                      "semana": 3,
+                      "r": 10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Single-leg RDL (Straight-leg DL)",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 6
+                    },
+                    {
+                      "semana": 2,
+                      "r": 6
+                    },
+                    {
+                      "semana": 3,
+                      "r": 6
+                    }
+                  ]
+                },
+                {
+                  "nombre": "DB Row",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 5
+                    },
+                    {
+                      "semana": 2,
+                      "r": 5
+                    },
+                    {
+                      "semana": 3,
+                      "r": 5
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Dynamic Lift",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×10"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×10"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×10"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "D4": {
+          "bloques": [
+            {
+              "tipo": "par",
+              "descanso_seg": 120,
+              "ejercicios": [
+                {
+                  "nombre": "Dumbbell Incline Bench + Med Ball",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "5,3,3+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "5,3,3+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Spiderman pos. lat stretch",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2×5r"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2×5r"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "par",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Push-up progression",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "10,10,10+"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "10,10,10+"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Toe Touch Squat with medicine ball",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": 8
+                    },
+                    {
+                      "semana": 2,
+                      "r": 8
+                    },
+                    {
+                      "semana": 3,
+                      "r": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tipo": "triset",
+              "descanso_seg": 90,
+              "ejercicios": [
+                {
+                  "nombre": "Half-kneeling Windmill",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "2+2"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "2+2"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "2+2"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Standing antirotation hold",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "3×25s"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "3×25s"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "3×25s"
+                    }
+                  ]
+                },
+                {
+                  "nombre": "Farmer Carry",
+                  "reps": [
+                    {
+                      "semana": 1,
+                      "r": "25y×3"
+                    },
+                    {
+                      "semana": 2,
+                      "r": "25y×3"
+                    },
+                    {
+                      "semana": 3,
+                      "r": "25y×3"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
