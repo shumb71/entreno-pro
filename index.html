@@ -572,7 +572,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         }
       }
     }catch(e){console.warn('[v114] SW cleanup error',e);}
-    navigator.serviceWorker.register('./sw.js?v=EXT_004', {scope: './'})
+    navigator.serviceWorker.register('./sw.js?v=EXT_005', {scope: './'})
       .then(function(reg){console.log('SW v102 registrado:', reg.scope);})
       .catch(function(err){console.warn('SW error:', err);});
   })();
@@ -1233,7 +1233,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </div>
 
     <div class="card" style="border:.5px solid rgba(91,143,255,.3)">
-      <div class="card-lbl" style="color:var(--blue)">📋 Programa externo (experimental — vEXT_003)</div>
+      <div class="card-lbl" style="color:var(--blue)">📋 Programa externo (experimental — vEXT_005)</div>
       <div class="info-box ib" style="font-size:12px"><i class="ti ti-info-circle"></i> Si existen programa.json/ejercicios.json en el repo indicado abajo, sustituyen al programa y al catálogo de ejercicios "de fábrica". Garmin/Fitbit siguen siempre en shumb71.github.io/Boyle (repo estable, sin tocar).</div>
       <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">Repo de GitHub Pages (usuario/repo, o solo el nombre si es shumb71)</label>
       <input type="text" id="repo-programa-input" value="" placeholder="entreno-pro"
@@ -1241,7 +1241,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         oninput="ST.repoPrograma=this.value;save();renderProgramaExtStatus();">
       <div id="programa-ext-status" style="font-size:12px;color:var(--text2);margin-bottom:.6rem"></div>
       <button class="bkbtn bkimp" onclick="fetchProgramaExterno(true)" style="margin-bottom:.5rem"><i class="ti ti-refresh"></i> Actualizar programa desde GitHub</button>
-      <button class="bkbtn bkimp" onclick="fetchEjerciciosExterno(true)"><i class="ti ti-refresh"></i> Actualizar catálogo de ejercicios</button>
+      <button class="bkbtn bkimp" onclick="fetchEjerciciosExterno(true)" style="margin-bottom:.5rem"><i class="ti ti-refresh"></i> Actualizar catálogo de ejercicios</button>
+      <button class="bkbtn" onclick="abrirEditorPrograma()"><i class="ti ti-external-link"></i> 🛠 Abrir editor de programa</button>
     </div>
 
     <div class="card">
@@ -8156,7 +8157,7 @@ function cSem(d){
 
 // DRIVE
 const GDRIVE_CLIENT_ID='906920921997-av6s253ivqb13i6jqtn5opkkdd983qgg.apps.googleusercontent.com';
-const APP_VERSION='vEXT_004';
+const APP_VERSION='vEXT_005';
 const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets';
 
 function exportarJSON(){
@@ -8598,6 +8599,9 @@ async function fetchFitbitAuto(manual) {
 // (ST.repoPrograma). Deliberadamente separado de Garmin/Fitbit, que siguen apuntando siempre
 // a shumb71.github.io/Boyle (el repo estable, no editable, que Jou mantiene como "seguridad").
 function getRepoPrograma(){ return (ST.repoPrograma||'entreno-pro').trim().replace(/^\/+|\/+$/g,''); }
+function abrirEditorPrograma(){
+  window.open('https://shumb71.github.io/'+getRepoPrograma()+'/editor.html', '_blank');
+}
 function getProgramaJsonUrl(){ return 'https://shumb71.github.io/'+getRepoPrograma()+'/programa.json'; }
 function getEjerciciosJsonUrl(){ return 'https://shumb71.github.io/'+getRepoPrograma()+'/ejercicios.json'; }
 
