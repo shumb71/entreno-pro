@@ -110,6 +110,13 @@
     <p class="sub">Entreno Boyle — edita fases, días y ejercicios sin tocar JSON a mano</p>
   </header>
 
+  <div style="margin-bottom:14px">
+    <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">Repositorio de GitHub Pages (usuario/repo, o solo el nombre si es shumb71)</label>
+    <input type="text" id="repo-input" placeholder="entreno-pro"
+      style="width:100%;max-width:400px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px"
+      oninput="guardarRepo(this.value)">
+  </div>
+
   <div class="toolbar">
     <button class="primary" onclick="cargarDesdeGitHub()">↓ Cargar desde GitHub</button>
     <button onclick="document.getElementById('file-input').click()">📂 Abrir fichero local</button>
@@ -150,18 +157,30 @@ function nuevoProgramaVacio(){
   mostrarStatus('info','Programa en blanco. Añade bloques y ejercicios desde cero, o carga uno existente.');
 }
 
+// Repo configurable: recordado en el propio navegador (localStorage), no en GitHub — cada
+// dispositivo/navegador donde abras este editor guarda su propio valor.
+function getRepoGuardado(){
+  return (localStorage.getItem('editorRepo')||'entreno-pro').trim().replace(/^\/+|\/+$/g,'');
+}
+function guardarRepo(val){
+  localStorage.setItem('editorRepo', val||'entreno-pro');
+}
+function repoUrlBase(){
+  return 'https://raw.githubusercontent.com/shumb71/'+getRepoGuardado()+'/main/';
+}
+
 async function cargarDesdeGitHub(){
-  mostrarStatus('info','Descargando programa.json…');
+  mostrarStatus('info','Descargando programa.json de '+getRepoGuardado()+'…');
   try{
-    const resp = await fetch('https://raw.githubusercontent.com/shumb71/Boyle/main/programa.json?t='+Date.now());
+    const resp = await fetch(repoUrlBase()+'programa.json?t='+Date.now());
     if(!resp.ok) throw new Error('HTTP '+resp.status);
     const data = await resp.json();
     if(!validar(data)) return;
     programa = data;
     render();
-    mostrarStatus('ok','Cargado desde GitHub correctamente.');
+    mostrarStatus('ok','Cargado desde '+getRepoGuardado()+' correctamente.');
   }catch(e){
-    mostrarStatus('err','No se pudo cargar desde GitHub: '+e.message+'. Prueba con "Abrir fichero local".');
+    mostrarStatus('err','No se pudo cargar desde '+getRepoGuardado()+': '+e.message+'. Comprueba el nombre del repo arriba, o prueba con "Abrir fichero local".');
   }
 }
 
@@ -403,6 +422,7 @@ function renderResumen(){
 
 // Arranque: intenta cargar automáticamente desde GitHub; si falla, deja la pantalla vacía
 // lista para "Abrir fichero local" o "Nuevo en blanco".
+document.getElementById('repo-input').value = getRepoGuardado();
 cargarDesdeGitHub();
 </script>
 </body>
